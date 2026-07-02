@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotspot Editor · Modular Manuals</title>
+<style>
+  :root{--bg:#0e0f13;--elev:#16181f;--card:#1b1e27;--border:#2a2e3a;--text:#e7e9ee;--dim:#9aa0ad;--faint:#6b7080;--accent:#ff7a45;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Inter",system-ui,sans-serif;line-height:1.5}
+  header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:1rem;margin:0;letter-spacing:.5px}
+  header .hint{color:var(--faint);font-size:.8rem}
+  select,button,input{font-family:inherit}
+  select{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px}
+  button{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 12px;cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#1a0d06;border:none;font-weight:600}
+  main{display:flex;gap:24px;padding:24px;align-items:flex-start;flex-wrap:wrap}
+  .stage{flex:0 0 auto}
+  .imgwrap{position:relative;display:inline-block;background:#fff;border-radius:8px;border:1px solid var(--border);user-select:none;touch-action:none}
+  .imgwrap img{display:block;border-radius:8px;max-width:520px;max-height:78vh;width:auto;height:auto}
+  .ring{position:absolute;transform:translate(-50%,-50%);border:3px solid rgba(255,45,45,.55);border-radius:50%;box-sizing:border-box;cursor:grab}
+  .ring.sel{border-color:#ff2d2d;box-shadow:0 0 0 2px rgba(255,255,255,.6),0 0 14px rgba(255,45,45,.6)}
+  .ring .tag{position:absolute;top:-9px;left:50%;transform:translate(-50%,-100%);background:#ff2d2d;color:#fff;font-size:10px;padding:1px 5px;border-radius:4px;white-space:nowrap}
+  .panel{flex:1;min-width:300px;max-width:520px}
+  .row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .keys{display:flex;flex-direction:column;gap:4px;margin:6px 0 14px}
+  .key{display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer}
+  .key.sel{border-color:var(--accent);background:rgba(255,122,69,.12)}
+  .key .name{flex:1;font-size:.9rem}
+  .key .coords{font-size:.72rem;color:var(--faint);font-variant-numeric:tabular-nums}
+  .key .del{color:var(--faint);border:none;background:none;padding:2px 6px}
+  .key .del:hover{color:#ff5555}
+  label.fld{display:flex;align-items:center;gap:10px;font-size:.82rem;color:var(--dim);margin-bottom:8px}
+  label.fld input[type=range]{flex:1}
+  textarea{width:100%;height:240px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:.78rem}
+  .sec-title{font-size:.7rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--faint);margin:18px 0 6px}
+  .note{color:var(--faint);font-size:.78rem;margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Hotspot Editor</h1>
+  <select id="mod"></select>
+  <span class="hint">Click / drag on the image to place the selected control. Edits auto-save in this browser.</span>
+  <span style="flex:1"></span>
+  <button id="reset">Reset to data.js</button>
+</header>
+<main>
+  <div class="stage">
+    <div class="imgwrap" id="imgwrap"><img id="img" alt="panel"><!-- rings injected --></div>
+  </div>
+  <div class="panel">
+    <div class="sec-title">Controls</div>
+    <div class="keys" id="keys"></div>
+    <div class="row">
+      <input id="newkey" placeholder="new control keyword (e.g. dub)" style="flex:1;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 10px">
+      <button id="add">+ Add</button>
+    </div>
+
+    <div class="sec-title">Selected control</div>
+    <label class="fld">radius&nbsp;X <input type="range" id="rx" min="0.01" max="0.4" step="0.005"><span id="rxv"></span></label>
+    <label class="fld">radius&nbsp;Y <input type="range" id="ry" min="0.01" max="0.4" step="0.005"><span id="ryv"></span></label>
+    <label class="fld"><input type="checkbox" id="link" checked> circle (link X = Y)</label>
+
+    <div class="sec-title">Export — paste into <code>data.js</code></div>
+    <textarea id="out" readonly></textarea>
+    <div class="row" style="margin-top:8px"><button class="primary" id="copy">Copy</button><span id="copied" class="note"></span></div>
+    <div class="note">Tip: the <b>hotspots</b> object replaces the one in the matching module in <code>js/data.js</code>.</div>
+  </div>
+</main>
+
+<script src="js/data.js"></script>
+<script>
+const $=(id)=>document.getElementById(id);
+let mod=null, hs={}, sel=null;
+
+function lsKey(id){return "hotspots:"+id;}
+function loadHotspots(m){
+  const saved=localStorage.getItem(lsKey(m.id));
+  if(saved){try{return JSON.parse(saved);}catch(e){}}
+  // clone from data.js, normalise r -> rx/ry
+  const out={};
+  Object.entries(m.hotspots||{}).forEach(([k,v])=>{
+    out[k]={x:v.x,y:v.y,rx:v.rx!=null?v.rx:v.r,ry:v.ry!=null?v.ry:v.r};
+  });
+  return out;
+}
+function save(){localStorage.setItem(lsKey(mod.id),JSON.stringify(hs));renderExport();}
+
+function selectModule(id){
+  mod=MODULES.find(m=>m.id===id);
+  hs=loadHotspots(mod);
+  sel=Object.keys(hs)[0]||null;
+  $("img").src=mod.image;
+  $("img").onload=drawRings;
+  renderKeys();drawRings();renderFields();renderExport();
+}
+
+function renderKeys(){
+  $("keys").innerHTML=Object.keys(hs).map(k=>{
+    const h=hs[k];
+    return `<div class="key ${k===sel?'sel':''}" data-k="${k}">
+      <span class="name">${k}</span>
+      <span class="coords">x ${h.x.toFixed(2)} · y ${h.y.toFixed(2)}</span>
+      <button class="del" data-del="${k}" title="delete">✕</button>
+    </div>`;
+  }).join("")||'<span class="note">No controls yet — add one below.</span>';
+}
+
+function drawRings(){
+  const wrap=$("imgwrap"), img=$("img");
+  [...wrap.querySelectorAll(".ring")].forEach(r=>r.remove());
+  const W=img.clientWidth, H=img.clientHeight;
+  Object.entries(hs).forEach(([k,h])=>{
+    const d=document.createElement("div");
+    d.className="ring"+(k===sel?" sel":"");
+    d.style.left=(h.x*W)+"px";d.style.top=(h.y*H)+"px";
+    d.style.width=(h.rx*2*W)+"px";d.style.height=(h.ry*2*H)+"px";
+    d.dataset.k=k;
+    if(k===sel) d.innerHTML='<span class="tag">'+k+'</span>';
+    wrap.appendChild(d);
+  });
+}
+
+function renderFields(){
+  const h=hs[sel];
+  if(!h){return;}
+  $("rx").value=h.rx;$("ry").value=h.ry;$("rxv").textContent=h.rx.toFixed(3);$("ryv").textContent=h.ry.toFixed(3);
+}
+
+function renderExport(){
+  const lines=Object.entries(hs).map(([k,h])=>{
+    const rx=+h.rx.toFixed(3), ry=+h.ry.toFixed(3), x=+h.x.toFixed(3), y=+h.y.toFixed(3);
+    const r=Math.abs(rx-ry)<0.0005?`r: ${rx}`:`rx: ${rx}, ry: ${ry}`;
+    return `      ${k}: { x: ${x}, y: ${y}, ${r} }`;
+  });
+  $("out").value="    hotspots: {\n"+lines.join(",\n")+"\n    },";
+}
+
+// --- interactions ---
+$("mod").addEventListener("change",e=>selectModule(e.target.value));
+$("keys").addEventListener("click",e=>{
+  const del=e.target.closest("[data-del]");
+  if(del){delete hs[del.dataset.del]; if(sel===del.dataset.del) sel=Object.keys(hs)[0]||null; save();renderKeys();drawRings();renderFields();return;}
+  const key=e.target.closest("[data-k]");
+  if(key){sel=key.dataset.k;renderKeys();drawRings();renderFields();}
+});
+$("add").addEventListener("click",()=>{
+  const k=$("newkey").value.trim().toLowerCase();
+  if(!k)return;
+  if(!hs[k]) hs[k]={x:0.5,y:0.5,rx:0.06,ry:0.06};
+  sel=k;$("newkey").value="";save();renderKeys();drawRings();renderFields();
+});
+function setRadius(which,val){
+  const h=hs[sel];if(!h)return;
+  h[which]=parseFloat(val);
+  if($("link").checked){h.rx=h.ry=parseFloat(val);}
+  save();drawRings();renderFields();
+}
+$("rx").addEventListener("input",e=>setRadius("rx",e.target.value));
+$("ry").addEventListener("input",e=>setRadius("ry",e.target.value));
+
+// click / drag to position selected hotspot
+let dragging=false;
+function place(e){
+  if(!sel)return;
+  const img=$("img");const r=img.getBoundingClientRect();
+  const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+  const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+  hs[sel].x=Math.min(1,Math.max(0,cx/r.width));
+  hs[sel].y=Math.min(1,Math.max(0,cy/r.height));
+  drawRings();renderKeys();renderExport();
+}
+$("imgwrap").addEventListener("mousedown",e=>{
+  const ring=e.target.closest(".ring");
+  if(ring) sel=ring.dataset.k;
+  dragging=true;place(e);renderKeys();
+});
+window.addEventListener("mousemove",e=>{if(dragging)place(e);});
+window.addEventListener("mouseup",()=>{if(dragging){dragging=false;save();}});
+
+$("copy").addEventListener("click",()=>{
+  navigator.clipboard.writeText($("out").value).then(()=>{$("copied").textContent="Copied!";setTimeout(()=>$("copied").textContent="",1500);});
+});
+$("reset").addEventListener("click",()=>{
+  localStorage.removeItem(lsKey(mod.id));selectModule(mod.id);
+});
+
+// init
+$("mod").innerHTML=MODULES.map(m=>`<option value="${m.id}">${m.name} — ${m.manufacturer}</option>`).join("");
+selectModule(MODULES.find(m=>m.hotspots)?.id||MODULES[0].id);
+window.addEventListener("resize",drawRings);
+</script>
+</body>
+</html>
