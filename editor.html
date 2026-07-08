@@ -191,7 +191,10 @@ $("reset").addEventListener("click",()=>{
 
 // init
 $("mod").innerHTML=MODULES.map(m=>`<option value="${m.id}">${m.name} — ${m.manufacturer}</option>`).join("");
-selectModule(MODULES.find(m=>m.hotspots)?.id||MODULES[0].id);
+const wanted=new URLSearchParams(location.search).get("m");
+const startId=(wanted&&MODULES.some(m=>m.id===wanted))?wanted:(MODULES.find(m=>m.hotspots)?.id||MODULES[0].id);
+$("mod").value=startId;
+selectModule(startId);
 window.addEventListener("resize",drawRings);
 </script>
 </body>

@@ -496,7 +496,10 @@ function viewPanel(m) {
     <h2 class="detail-title">Panel guide</h2>
     <p class="pg-hint">Numbered rings mark the controls on the panel — tap a number to jump to its description. Hover a row to light up its control.</p>
     <div class="panel-guide">
-      <div class="pg-imgwrap"><img src="${esc(m.image)}" alt="${esc(m.name)} front panel">${rings}</div>
+      <div class="pg-imgcol">
+        <div class="pg-imgwrap"><img src="${esc(m.image)}" alt="${esc(m.name)} front panel">${rings}</div>
+        <a class="pg-edit" href="editor.html?m=${encodeURIComponent(m.id)}" target="_blank" rel="noopener">✎ Adjust these circles in the editor ↗</a>
+      </div>
       <div class="pg-legend">${legend}</div>
     </div>`;
 }
