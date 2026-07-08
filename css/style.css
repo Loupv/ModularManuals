@@ -726,3 +726,20 @@ a:hover { text-decoration: underline; }
   .panel-guide { flex-direction: column; }
   .pg-imgwrap { position: relative; top: 0; width: min(300px, 80vw); align-self: center; }
 }
+
+/* ---------- Prev/next module bar ---------- */
+.mod-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.mod-nav-btn {
+  flex: 1; min-width: 0; padding: 8px 12px; border: 1px solid var(--border);
+  border-radius: 9px; background: var(--bg-card); color: var(--text-dim);
+  font-size: 0.86rem; cursor: pointer; text-decoration: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mod-nav-btn.next { text-align: right; }
+.mod-nav-btn:hover { border-color: var(--accent); color: var(--text); text-decoration: none; }
+.mod-nav-pos { font-size: 0.72rem; color: var(--text-faint); flex-shrink: 0; }
+
+/* ---------- Sidebar module list ---------- */
+#module-nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-mod { padding: 6px 12px; }
+.nav-mod .mfr { font-size: 0.68rem; }

@@ -59,9 +59,21 @@ function hot(text, m) {
 
 /* ---------- Sidebar ---------- */
 function setActiveNav(route) {
+  const r = route || "#/";
   document.querySelectorAll(".nav-item").forEach((el) => {
-    el.classList.toggle("active", el.getAttribute("data-route") === route);
+    const t = el.getAttribute("data-route");
+    const active = t === "#/" ? r === "#/" : r === t || r.startsWith(t + "/");
+    el.classList.toggle("active", active);
   });
+}
+
+// Persistent module list in the sidebar (data-driven).
+function mountModuleNav() {
+  const el = document.getElementById("module-nav");
+  if (!el) return;
+  el.innerHTML = MODULES.map(
+    (m) => `<a class="nav-item nav-mod" data-route="#/module/${m.id}">${esc(m.name)}<span class="mfr">${esc(m.manufacturer)}</span></a>`
+  ).join("");
 }
 
 /* ---------- Views ---------- */
@@ -436,7 +448,8 @@ function viewPanel(m) {
     return rows ? `<div class="ctrl-list-label">${label}</div><dl class="ctrl-list">${rows}</dl>` : "";
   }).join("");
 
-  return `<div class="detail-top">
+  return `${moduleNav(m, "/panel")}
+    <div class="detail-top">
       <a class="back-link" data-route="#/module/${m.id}">← ${esc(m.name)}</a>
     </div>
     <h2 class="detail-title">Panel guide</h2>
@@ -445,6 +458,18 @@ function viewPanel(m) {
       <div class="pg-imgwrap"><img src="${esc(m.image)}" alt="${esc(m.name)} front panel">${rings}</div>
       <div class="pg-legend">${legend}</div>
     </div>`;
+}
+
+// Prev/next module bar (wraps around). `kind` is "" (overview) or "/panel".
+function moduleNav(m, kind) {
+  const i = MODULES.findIndex((x) => x.id === m.id);
+  const prev = MODULES[(i - 1 + MODULES.length) % MODULES.length];
+  const next = MODULES[(i + 1) % MODULES.length];
+  return `<nav class="mod-nav" aria-label="Modules">
+    <a class="mod-nav-btn" data-route="#/module/${prev.id}${kind}">← ${esc(prev.name)}</a>
+    <span class="mod-nav-pos">${i + 1} / ${MODULES.length}</span>
+    <a class="mod-nav-btn next" data-route="#/module/${next.id}${kind}">${esc(next.name)} →</a>
+  </nav>`;
 }
 
 function specsBlockHTML(m) {
@@ -479,7 +504,8 @@ function viewModuleOverview(m) {
         <a class="manual-link" href="${esc(m.manualUrl)}" target="_blank" rel="noopener">Official manual / product page ↗</a>
       </div>
     </div>`;
-  return `${head}
+  return `${moduleNav(m, "")}
+    ${head}
     ${outcomeCardsHTML(m)}
     ${allModelTablesHTML(m)}
     ${allEffectBanksHTML(m)}
@@ -802,6 +828,7 @@ document.addEventListener("click", (e) => {
 window.addEventListener("hashchange", render);
 window.addEventListener("DOMContentLoaded", () => {
   mountSearch();
-  enhanceA11y(document.querySelector(".sidebar")); // static nav links
+  mountModuleNav();
+  enhanceA11y(document.querySelector(".sidebar")); // static + module nav links
   render();
 });
