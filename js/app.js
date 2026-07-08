@@ -20,12 +20,12 @@ const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // explicit rx/ry render as an ellipse (width % of width, height % of height).
 function ringStyle(h) {
   const pos = `left:${h.x * 100}%;top:${h.y * 100}%;`;
-  if (h.rx != null || h.ry != null) {
-    const rx = h.rx != null ? h.rx : h.r;
-    const ry = h.ry != null ? h.ry : h.r;
-    return `${pos}width:${rx * 200}%;height:${ry * 200}%;`;
-  }
-  return `${pos}width:${h.r * 200}%;aspect-ratio:1;`;
+  const rx = h.rx != null ? h.rx : h.r;
+  const ry = h.ry != null ? h.ry : h.r;
+  // Equal radii (incl. r-only and editor/localStorage rx==ry) → true circle,
+  // sized off the image WIDTH so it stays round on any panel aspect ratio.
+  if (Math.abs(rx - ry) < 0.0005) return `${pos}width:${rx * 200}%;aspect-ratio:1;`;
+  return `${pos}width:${rx * 200}%;height:${ry * 200}%;`;
 }
 
 // Hotspot coordinates: localStorage override from the editor wins over data.js.
