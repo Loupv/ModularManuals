@@ -15,6 +15,19 @@ const esc = (s) =>
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+// Inline style for a hotspot ring/overlay. A plain `r` renders as a TRUE circle
+// (sized off the image width via aspect-ratio, so it stays round on tall panels);
+// explicit rx/ry render as an ellipse (width % of width, height % of height).
+function ringStyle(h) {
+  const pos = `left:${h.x * 100}%;top:${h.y * 100}%;`;
+  if (h.rx != null || h.ry != null) {
+    const rx = h.rx != null ? h.rx : h.r;
+    const ry = h.ry != null ? h.ry : h.r;
+    return `${pos}width:${rx * 200}%;height:${ry * 200}%;`;
+  }
+  return `${pos}width:${h.r * 200}%;aspect-ratio:1;`;
+}
+
 // Hotspot coordinates: localStorage override from the editor wins over data.js.
 // Cache per module id so editing one module never serves another's stale data.
 const _hsCache = {};
@@ -276,12 +289,7 @@ function stepVisual(text, m) {
   );
   if (!keys.length) return "";
   const rings = keys
-    .map((k) => {
-      const h = HS[k];
-      const rx = h.rx != null ? h.rx : h.r;
-      const ry = h.ry != null ? h.ry : h.r;
-      return `<span class="hot-ring" style="left:${h.x * 100}%;top:${h.y * 100}%;width:${rx * 200}%;height:${ry * 200}%"></span>`;
-    })
+    .map((k) => `<span class="hot-ring" style="${ringStyle(HS[k])}"></span>`)
     .join("");
   return `<span class="step-vis" aria-hidden="true"><img src="${esc(m.image)}" alt="" loading="lazy">${rings}</span>`;
 }
@@ -405,9 +413,8 @@ function viewPanel(m) {
   const rings = markers
     .map((mk) => {
       const rx = mk.h.rx != null ? mk.h.rx : mk.h.r;
-      const ry = mk.h.ry != null ? mk.h.ry : mk.h.r;
-      return `<span class="pg-ring" id="pgm-${mk.n}" style="left:${mk.h.x * 100}%;top:${mk.h.y * 100}%;width:${rx * 200}%;height:${ry * 200}%"></span>
-        <a class="pg-dot" data-scroll="pg-${mk.n}" style="left:${(mk.h.x + (mk.h.rx != null ? mk.h.rx : mk.h.r)) * 100}%;top:${mk.h.y * 100}%" title="${esc(mk.ctrl ? mk.ctrl.name : mk.key)}">${mk.n}</a>`;
+      return `<span class="pg-ring" id="pgm-${mk.n}" style="${ringStyle(mk.h)}"></span>
+        <a class="pg-dot" data-scroll="pg-${mk.n}" style="left:${(mk.h.x + rx) * 100}%;top:${mk.h.y * 100}%" title="${esc(mk.ctrl ? mk.ctrl.name : mk.key)}">${mk.n}</a>`;
     })
     .join("");
 
@@ -624,12 +631,10 @@ function showHotPop(el) {
   const HS = moduleHotspots(m);
   const hs = HS && HS[key];
   if (!hs) return;
-  const rx = hs.rx != null ? hs.rx : hs.r;
-  const ry = hs.ry != null ? hs.ry : hs.r;
   const pop = ensureHotPop();
   pop.innerHTML =
     `<div class="hot-pop-inner"><img src="${esc(m.image)}" alt="">` +
-    `<span class="hot-ring" style="left:${hs.x * 100}%;top:${hs.y * 100}%;width:${rx * 200}%;height:${ry * 200}%"></span></div>` +
+    `<span class="hot-ring" style="${ringStyle(hs)}"></span></div>` +
     `<div class="hot-pop-cap">${esc(el.textContent)}</div>`;
   pop.style.display = "block";
   const r = el.getBoundingClientRect();

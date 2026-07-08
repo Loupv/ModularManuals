@@ -116,8 +116,9 @@ function drawRings(){
   Object.entries(hs).forEach(([k,h])=>{
     const d=document.createElement("div");
     d.className="ring"+(k===sel?" sel":"");
+    const circle=Math.abs(h.rx-h.ry)<0.0005; // a true circle sizes both axes off width
     d.style.left=(h.x*W)+"px";d.style.top=(h.y*H)+"px";
-    d.style.width=(h.rx*2*W)+"px";d.style.height=(h.ry*2*H)+"px";
+    d.style.width=(h.rx*2*W)+"px";d.style.height=((circle?h.rx*W:h.ry*H)*2)+"px";
     d.dataset.k=k;
     if(k===sel) d.innerHTML='<span class="tag">'+k+'</span>';
     wrap.appendChild(d);
