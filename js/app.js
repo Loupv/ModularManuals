@@ -370,6 +370,76 @@ function sectionCardsHTML(m) {
 
 let activeModule = null;
 
+// Unique controls of a module (deduped by name), grouped for the panel guide.
+function uniqueControls(m) {
+  const seen = new Set();
+  const out = [];
+  (m.sections || []).forEach((sec) =>
+    (sec.controls || []).forEach((c) => {
+      const o = resolveControl(c);
+      if (!o) return;
+      const key = o.name.trim().toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      out.push(o);
+    })
+  );
+  return out;
+}
+
+// Annotated panel view: numbered markers on the panel image + a legend that
+// lists every control with its function. Markers come from the hotspot map.
+function viewPanel(m) {
+  activeModule = m;
+  const HS = moduleHotspots(m) || {};
+  const hsKeys = Object.keys(HS);
+  const ctrls = uniqueControls(m);
+
+  // Assign each hotspot a number and try to attach it to a control entry.
+  const markers = hsKeys.map((k, i) => {
+    const ctrl = ctrls.find((c) => c.name.toLowerCase().includes(k.toLowerCase()));
+    return { n: i + 1, key: k, h: HS[k], ctrl };
+  });
+  const markerFor = (c) => markers.find((mk) => mk.ctrl === c);
+
+  const rings = markers
+    .map((mk) => {
+      const rx = mk.h.rx != null ? mk.h.rx : mk.h.r;
+      const ry = mk.h.ry != null ? mk.h.ry : mk.h.r;
+      return `<span class="pg-ring" id="pgm-${mk.n}" style="left:${mk.h.x * 100}%;top:${mk.h.y * 100}%;width:${rx * 200}%;height:${ry * 200}%"></span>
+        <a class="pg-dot" data-scroll="pg-${mk.n}" style="left:${(mk.h.x + (mk.h.rx != null ? mk.h.rx : mk.h.r)) * 100}%;top:${mk.h.y * 100}%" title="${esc(mk.ctrl ? mk.ctrl.name : mk.key)}">${mk.n}</a>`;
+    })
+    .join("");
+
+  const GROUPS = [
+    ["knob", "Knobs"], ["button", "Buttons"], ["switch", "Switches"],
+    ["jack-in", "Inputs"], ["jack-out", "Outputs"], ["mode", "Modes & menus"], ["model", "Models"]
+  ];
+  const legend = GROUPS.map(([type, label]) => {
+    const rows = ctrls
+      .filter((c) => c.type === type)
+      .map((c) => {
+        const mk = markerFor(c);
+        return `<div class="ctrl pg-row" ${mk ? `id="pg-${mk.n}" data-mark="${mk.n}"` : ""}>
+          <dt>${mk ? `<span class="pg-num">${mk.n}</span>` : `<span class="pg-num pg-num--none"></span>`}<span class="ctrl-name">${esc(c.name)}</span><span class="ctrl-type type-${c.type}">${esc(TYPE_LABEL[c.type] || c.type)}</span></dt>
+          <dd>${esc(c.desc)}</dd>
+        </div>`;
+      })
+      .join("");
+    return rows ? `<div class="ctrl-list-label">${label}</div><dl class="ctrl-list">${rows}</dl>` : "";
+  }).join("");
+
+  return `<div class="detail-top">
+      <a class="back-link" data-route="#/module/${m.id}">← ${esc(m.name)}</a>
+    </div>
+    <h2 class="detail-title">Panel guide</h2>
+    <p class="pg-hint">Numbered rings mark the controls on the panel — tap a number to jump to its description. Hover a row to light up its control.</p>
+    <div class="panel-guide">
+      <div class="pg-imgwrap"><img src="${esc(m.image)}" alt="${esc(m.name)} front panel">${rings}</div>
+      <div class="pg-legend">${legend}</div>
+    </div>`;
+}
+
 function specsBlockHTML(m) {
   const specs = Object.entries(m.specs)
     .map(([k, v]) => `<div class="spec"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`)
@@ -385,7 +455,10 @@ function viewModuleOverview(m) {
     .map((t) => `<div class="dyk-card"><h4>${esc(t.title)}</h4><p>${esc(t.fact)}</p></div>`)
     .join("");
   const head = `<div class="module-head">
-      <div class="module-img"><img src="${esc(m.image)}" alt="${esc(m.name)} front panel"></div>
+      <div class="module-img module-img--link" data-route="#/module/${m.id}/panel" title="Open the panel guide">
+        <img src="${esc(m.image)}" alt="${esc(m.name)} front panel — tap for the panel guide">
+        <span class="module-img-hint">Tap to explore every control</span>
+      </div>
       <div class="module-meta">
         <div class="mfr">${esc(m.manufacturer)}</div>
         <h2>${esc(m.name)}</h2>
@@ -491,6 +564,9 @@ function render() {
     } else if (slash === -1) {
       html = viewModuleOverview(m);
       title = `${m.name} — Modular Manuals`;
+    } else if (rest.slice(slash + 1) === "panel") {
+      html = viewPanel(m);
+      title = `Panel guide · ${m.name}`;
     } else {
       const si = parseInt(rest.slice(slash + 1), 10);
       html = viewSection(m, si);
@@ -574,6 +650,13 @@ function hideHotPop() {
 document.addEventListener("mouseover", (e) => {
   const el = e.target.closest(".hot");
   if (el) showHotPop(el);
+  // Panel guide: hovering a legend row lights up its ring on the image.
+  const row = e.target.closest(".pg-row[data-mark]");
+  document.querySelectorAll(".pg-ring.sel").forEach((r) => r.classList.remove("sel"));
+  if (row) {
+    const ring = document.getElementById("pgm-" + row.getAttribute("data-mark"));
+    if (ring) ring.classList.add("sel");
+  }
 });
 document.addEventListener("mouseout", (e) => {
   if (e.target.closest(".hot")) hideHotPop();
