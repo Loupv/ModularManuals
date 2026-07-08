@@ -309,18 +309,23 @@ function stepVisual(text, m) {
 // Result-first entry points: each outcome opens one task, already expanded.
 function outcomeCardsHTML(m) {
   if (!m.outcomes || !m.outcomes.length) return "";
-  const cards = m.outcomes
-    .map((o) => {
-      const sec = m.sections[o.si];
-      const h = sec && sec.howtos && sec.howtos[o.hi];
-      if (!h) return "";
-      return `<a class="oc-card" data-route="#/module/${m.id}/${o.si}" data-target="task-${o.si}-${o.hi}">
-        <h3>${esc(o.title)}</h3>
-        <span class="oc-meta">${h.steps.length} steps →</span>
-      </a>`;
-    })
-    .join("");
-  return `<div class="block-label oc-label">What do you want to do?</div><div class="oc-grid">${cards}</div>`;
+  const card = (o) => {
+    const sec = m.sections[o.si];
+    const h = sec && sec.howtos && sec.howtos[o.hi];
+    if (!h) return "";
+    return `<a class="oc-card${o.hidden ? " oc-hidden" : ""}" data-route="#/module/${m.id}/${o.si}" data-target="task-${o.si}-${o.hi}">
+      ${o.hidden ? `<span class="oc-tag">✦ hidden</span>` : ""}
+      <h3>${esc(o.title)}</h3>
+      <span class="oc-meta">${h.steps.length} steps →</span>
+    </a>`;
+  };
+  const normal = m.outcomes.filter((o) => !o.hidden).map(card).join("");
+  const hidden = m.outcomes.filter((o) => o.hidden).map(card).join("");
+  let html = `<div class="block-label oc-label">What do you want to do?</div><div class="oc-grid">${normal}</div>`;
+  if (hidden) {
+    html += `<div class="block-label oc-label oc-hidden-label">✦ Hidden &amp; secret modes</div><div class="oc-grid">${hidden}</div>`;
+  }
+  return html;
 }
 
 // Full detail for ONE section: tasks first (action), then diagram, prose, controls.
@@ -425,8 +430,10 @@ function viewPanel(m) {
   const rings = markers
     .map((mk) => {
       const rx = mk.h.rx != null ? mk.h.rx : mk.h.r;
+      const nm = mk.ctrl ? mk.ctrl.name : mk.key;
+      const dsc = mk.ctrl ? mk.ctrl.desc : "";
       return `<span class="pg-ring" id="pgm-${mk.n}" style="${ringStyle(mk.h)}"></span>
-        <a class="pg-dot" data-scroll="pg-${mk.n}" style="left:${(mk.h.x + rx) * 100}%;top:${mk.h.y * 100}%" title="${esc(mk.ctrl ? mk.ctrl.name : mk.key)}">${mk.n}</a>`;
+        <a class="pg-dot" data-scroll="pg-${mk.n}" data-tipname="${esc(nm)}" data-tipdesc="${esc(dsc)}" style="left:${(mk.h.x + rx) * 100}%;top:${mk.h.y * 100}%">${mk.n}</a>`;
     })
     .join("");
 
@@ -447,25 +454,40 @@ function viewPanel(m) {
     ? `<div class="ctrl-list-label">On the panel</div><dl class="ctrl-list">${numberedRows}</dl>`
     : "";
 
-  // Remaining controls (no panel marker), grouped by type.
+  // Controls that live on a separate expander board (section title mentions it).
+  const expanderNames = new Set();
+  (m.sections || []).forEach((sec) => {
+    if (/expan/i.test(sec.title)) (sec.controls || []).forEach((c) => {
+      const o = resolveControl(c);
+      if (o) expanderNames.add(o.name);
+    });
+  });
+
   const marked = new Set(markers.filter((mk) => mk.ctrl).map((mk) => mk.ctrl.name));
-  const rest = ctrls.filter((c) => !marked.has(c.name));
   const GROUPS = [
     ["knob", "Knobs"], ["button", "Buttons"], ["switch", "Switches"],
     ["jack-in", "Inputs"], ["jack-out", "Outputs"], ["mode", "Modes & menus"], ["model", "Models"]
   ];
-  const restBlocks = GROUPS.map(([type, label]) => {
-    const rows = rest
-      .filter((c) => c.type === type)
-      .map((c) => `<div class="ctrl">
-        <dt><span class="pg-num pg-num--none"></span><span class="ctrl-name">${esc(c.name)}</span><span class="ctrl-type type-${c.type}">${esc(TYPE_LABEL[c.type] || c.type)}</span></dt>
-        <dd>${esc(c.desc)}</dd>
-      </div>`)
-      .join("");
-    return rows ? `<div class="ctrl-list-label">${label}</div><dl class="ctrl-list">${rows}</dl>` : "";
-  }).join("");
-  const restBlock = rest.length ? `<div class="section-title pg-more-title">Other controls</div>${restBlocks}` : "";
-  const legend = numberedBlock + restBlock;
+  const groupBlocks = (list) =>
+    GROUPS.map(([type, label]) => {
+      const rows = list
+        .filter((c) => c.type === type)
+        .map((c) => `<div class="ctrl">
+          <dt><span class="pg-num pg-num--none"></span><span class="ctrl-name">${esc(c.name)}</span><span class="ctrl-type type-${c.type}">${esc(TYPE_LABEL[c.type] || c.type)}</span></dt>
+          <dd>${esc(c.desc)}</dd>
+        </div>`)
+        .join("");
+      return rows ? `<div class="ctrl-list-label">${label}</div><dl class="ctrl-list">${rows}</dl>` : "";
+    }).join("");
+
+  const rest = ctrls.filter((c) => !marked.has(c.name) && !expanderNames.has(c.name));
+  const expander = ctrls.filter((c) => expanderNames.has(c.name) && !marked.has(c.name));
+  const restBlock = rest.length ? `<div class="section-title pg-more-title">Other controls</div>${groupBlocks(rest)}` : "";
+  const expanderBlock = expander.length
+    ? `<div class="section-title pg-more-title">On the CV &amp; USB expander</div>
+       <p class="pg-hint">These live on the included 2HP expander modules, not the main panel.</p>${groupBlocks(expander)}`
+    : "";
+  const legend = numberedBlock + restBlock + expanderBlock;
 
   return `${moduleNav(m, "/panel")}
     <div class="detail-top">
@@ -696,20 +718,50 @@ function showHotPop(el) {
 function hideHotPop() {
   if (hotPop) hotPop.style.display = "none";
 }
+
+// Small name+description tooltip shown when hovering a panel-guide dot.
+let pgTip = null;
+function showPgTip(dot) {
+  if (!pgTip) {
+    pgTip = document.createElement("div");
+    pgTip.className = "pg-tip";
+    document.body.appendChild(pgTip);
+  }
+  const desc = dot.getAttribute("data-tipdesc");
+  pgTip.innerHTML = `<b>${esc(dot.getAttribute("data-tipname"))}</b>${desc ? `<span>${esc(desc)}</span>` : ""}`;
+  pgTip.style.display = "block";
+  const r = dot.getBoundingClientRect();
+  const pw = pgTip.offsetWidth;
+  let left = Math.min(r.right + 8, window.innerWidth - pw - 8);
+  if (left < 8) left = 8;
+  let top = r.top + r.height / 2 - pgTip.offsetHeight / 2;
+  top = Math.max(8, Math.min(top, window.innerHeight - pgTip.offsetHeight - 8));
+  pgTip.style.left = `${left}px`;
+  pgTip.style.top = `${top}px`;
+}
+function hidePgTip() { if (pgTip) pgTip.style.display = "none"; }
+
 // Hover (desktop) and focus (keyboard) both reveal the preview.
 document.addEventListener("mouseover", (e) => {
   const el = e.target.closest(".hot");
   if (el) showHotPop(el);
-  // Panel guide: hovering a legend row lights up its ring on the image.
+  // Panel guide: hovering a legend row or a dot lights up its ring on the image.
   const row = e.target.closest(".pg-row[data-mark]");
   document.querySelectorAll(".pg-ring.sel").forEach((r) => r.classList.remove("sel"));
   if (row) {
     const ring = document.getElementById("pgm-" + row.getAttribute("data-mark"));
     if (ring) ring.classList.add("sel");
   }
+  const dot = e.target.closest(".pg-dot");
+  if (dot) {
+    showPgTip(dot);
+    const ring = document.getElementById("pgm-" + dot.getAttribute("data-scroll").replace("pg-", ""));
+    if (ring) ring.classList.add("sel");
+  }
 });
 document.addEventListener("mouseout", (e) => {
   if (e.target.closest(".hot")) hideHotPop();
+  if (e.target.closest(".pg-dot")) hidePgTip();
 });
 document.addEventListener("focusin", (e) => {
   const el = e.target.closest && e.target.closest(".hot");

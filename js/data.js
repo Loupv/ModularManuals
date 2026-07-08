@@ -2098,7 +2098,8 @@ const MODULES = [
       {
         "title": "Unlock the hidden orange bank",
         "si": 1,
-        "hi": 0
+        "hi": 0,
+        "hidden": true
       },
       {
         "title": "Plucks that sweep themselves",
@@ -2128,7 +2129,8 @@ const MODULES = [
       {
         "title": "Load your own DX7 patches",
         "si": 7,
-        "hi": 1
+        "hi": 1,
+        "hidden": true
       },
       {
         "title": "Track pitch perfectly in tune",
@@ -3802,7 +3804,8 @@ const MODULES = [
       {
         "title": "Unlock the hidden wavetable synth",
         "si": 7,
-        "hi": 2
+        "hi": 2,
+        "hidden": true
       }
     ],
     "hotspots": {
@@ -4277,7 +4280,26 @@ const MODULES = [
       {
         "title": "Strum full chords",
         "si": 6,
-        "hi": 1
+        "hi": 1,
+        "hidden": true
+      },
+      {
+        "title": "Enter the Disastrous Peace easter egg",
+        "si": 7,
+        "hi": 0,
+        "hidden": true
+      },
+      {
+        "title": "Unlock the hidden FM voice",
+        "si": 6,
+        "hi": 0,
+        "hidden": true
+      },
+      {
+        "title": "Get Karplusverb (string + reverb)",
+        "si": 6,
+        "hi": 2,
+        "hidden": true
       }
     ],
     "hotspots": {

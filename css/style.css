@@ -745,3 +745,34 @@ a:hover { text-decoration: underline; }
 .nav-mod .mfr { font-size: 0.68rem; }
 
 .pg-more-title { margin-top: 30px; }
+
+/* ---------- Hidden / easter-egg outcome cards ---------- */
+.oc-hidden-label { margin-top: 24px; color: var(--purple); }
+.oc-card.oc-hidden {
+  background: linear-gradient(140deg, rgba(183,148,255,0.14), var(--bg-card) 55%);
+  border-color: rgba(183,148,255,0.45); position: relative;
+}
+.oc-card.oc-hidden:hover { border-color: var(--purple); }
+.oc-card.oc-hidden .oc-meta { color: var(--purple); }
+.oc-tag {
+  align-self: flex-start; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.8px;
+  font-weight: 700; color: var(--purple); border: 1px solid var(--purple);
+  border-radius: 999px; padding: 1px 7px; margin-bottom: 2px;
+}
+
+/* ---------- Denser control lists (pack to screen) ---------- */
+.pg-legend .ctrl-list, .explain-body .ctrl-list { columns: 2; column-gap: 26px; }
+.pg-legend .ctrl, .explain-body .ctrl { break-inside: avoid; -webkit-column-break-inside: avoid; }
+@media (max-width: 900px) {
+  .pg-legend .ctrl-list, .explain-body .ctrl-list { columns: 1; }
+}
+
+/* Panel-guide dot tooltip */
+.pg-tip {
+  position: fixed; z-index: 1000; display: none;
+  max-width: 260px; background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: 9px; padding: 9px 11px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+.pg-tip b { display: block; color: var(--text); font-size: 0.86rem; margin-bottom: 3px; }
+.pg-tip span { color: var(--text-dim); font-size: 0.78rem; line-height: 1.45; }
