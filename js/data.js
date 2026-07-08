@@ -4950,6 +4950,415 @@ const MODULES = [
         "ry": 0.035
       }
     }
+  },
+  {
+    "id": "batumi",
+    "name": "Batumi II",
+    "manufacturer": "Xaoc Devices",
+    "hp": 10,
+    "tagline": "Quad wide-range LFO and modulation hub with four sync modes.",
+    "overview": "Batumi II is the current production version: four voltage- and tempo-controllable LFOs giving twelve simultaneous waveforms, with V/oct tracking up to audio rate. It is a ground-up redesign of the original Batumi (still runnable on firmware 2.x), keeping the same 10 HP layout.",
+    "manualUrl": "https://xaocdevices.com/manuals/xaoc_batumi2_poti2_manual.pdf",
+    "specs": {
+      "Width": "10 HP",
+      "Depth": "45 mm (skiff-friendly)",
+      "Power": "+90 mA / -50 mA",
+      "Channels": "4 (A, B, C, D)",
+      "Outputs per channel": "3 (Sine, Assignable, Rectangle)",
+      "Frequency range": "0.01 Hz - 100 Hz (slider); to ~5 kHz with CV",
+      "Firmware": "USB updatable"
+    },
+    "trivia": [
+      {
+        "title": "Named after a port",
+        "fact": "Like most Xaoc modules, Batumi is named after a location in the former Eastern Bloc: the Georgian Black Sea port city of Batumi. Its subtitle jokingly dates it as a 'Model of 1974'."
+      },
+      {
+        "title": "Days-long cycles",
+        "fact": "In Divide mode with a x32 ratio and -10V CV, a single LFO cycle can stretch to roughly 37.9 days. The manual openly dares you to try it."
+      },
+      {
+        "title": "It becomes an oscillator",
+        "fact": "Because Batumi II tracks V/oct and reaches audio rate (~5 kHz), a channel can double as four rough VCOs, and deep phase modulation turns it into an FM sound source."
+      }
+    ],
+    "image": "images/batumi.png",
+    "sections": [
+      {
+        "title": "What Batumi II Is",
+        "body": [
+          "Four independent LFOs in 10 HP, each putting out sine, an assignable wave, and rectangle at once. A global mode links the four channels in different ways, so it works as one big modulation hub."
+        ],
+        "controls": [
+          {
+            "name": "Channels A-D",
+            "type": "mode",
+            "desc": "Four vertical channels, each with an illuminated slider and three output jacks. Channel A is the master when a synchronous mode is active."
+          },
+          {
+            "name": "MODE button",
+            "type": "button",
+            "desc": "Sets the global relationship between the four channels; its LED color shows the current mode."
+          },
+          {
+            "name": "WAVE button",
+            "type": "button",
+            "desc": "Chooses which waveform appears at every channel's ASGN output."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Get four free-running LFOs immediately",
+            "steps": [
+              "Patch the SINE (or RECT) jack of each channel to a destination.",
+              "Press the MODE button repeatedly until the MODE LED is red (Free mode).",
+              "Move each channel's slider to set its speed."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Per-Channel Controls",
+        "body": [
+          "Each channel has one illuminated slider plus a CV input, a reset/sync input, and three output jacks. What the slider and CV do depends on the current mode."
+        ],
+        "controls": [
+          {
+            "name": "Slider (A-D)",
+            "type": "knob",
+            "desc": "Illuminated fader. In Free mode it sets frequency (0.01-100 Hz); in other modes it sets phase or the divide/multiply ratio.",
+            "tip": "The slider glow pulses at the channel's own rate."
+          },
+          {
+            "name": "FRQ PH RTO",
+            "type": "jack-in",
+            "desc": "CV input that controls the parameter the slider governs in the active mode: frequency (V/oct), phase offset, or ratio.",
+            "tip": "Add it to the slider value; it can push past the slider's limits."
+          },
+          {
+            "name": "RESET SYNC",
+            "type": "jack-in",
+            "desc": "Per-channel input that resets or tempo-syncs that channel from a rising edge, gate, or trigger."
+          },
+          {
+            "name": "SINE",
+            "type": "jack-out",
+            "desc": "Bipolar +/-5V sine wave."
+          },
+          {
+            "name": "ASGN",
+            "type": "jack-out",
+            "desc": "Bipolar +/-5V assignable wave; its shape is picked with the WAVE button."
+          },
+          {
+            "name": "RECT",
+            "type": "jack-out",
+            "desc": "Bipolar +/-5V rectangle/square wave (fixed, not affected by phase in Phase mode)."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Voltage-control one LFO's speed",
+            "steps": [
+              "Press MODE until the LED is red (Free mode).",
+              "Patch a CV source into that channel's FRQ PH RTO jack.",
+              "Set a base rate with the slider; the CV adds to it."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "The Four Modes",
+        "body": [
+          "A single MODE button cycles through Free, Phase, Divide, and Mult. Each mode is shown by a distinct MODE-LED color and changes how channels B/C/D relate to channel A."
+        ],
+        "controls": [
+          {
+            "name": "MODE button",
+            "type": "button",
+            "desc": "Press repeatedly to step through modes. LED colors: Free = red, Phase = yellow, Divide = blue, Mult = turquoise."
+          },
+          {
+            "name": "MODE LED",
+            "type": "mode",
+            "desc": "Also blinks briefly to confirm a channel crossing a phase point or changing its divide/multiply factor."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Make phase-shifted copies of one LFO",
+            "steps": [
+              "Press MODE until the LED is yellow (Phase mode).",
+              "Set channel A's speed with slider A.",
+              "Use sliders B, C, D to offset each channel's phase from 0-360 degrees relative to A."
+            ]
+          },
+          {
+            "goal": "Create clock-divided modulation",
+            "steps": [
+              "Press MODE until the LED is blue (Divide mode).",
+              "Set the master rate with slider A.",
+              "Use sliders B, C, D to pick division factors (1, 2, 3, 4, 5, 8, 16, 32) so those channels run slower than A."
+            ]
+          },
+          {
+            "goal": "Get faster, multiplied channels",
+            "steps": [
+              "Press MODE until the LED is turquoise (Mult mode).",
+              "Set slider A for the base rate.",
+              "Use sliders B, C, D to pick multiplication factors (up to x32) so those channels run faster, capped at ~5 kHz."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Choosing The Assignable Wave",
+        "body": [
+          "Every channel's ASGN output shares one shape, chosen with the WAVE button. Options include two random sources, so Batumi II can also be a slow random-voltage generator."
+        ],
+        "controls": [
+          {
+            "name": "WAVE button",
+            "type": "button",
+            "desc": "Press repeatedly to select the ASGN waveform for all channels."
+          },
+          {
+            "name": "WAVE LED",
+            "type": "mode",
+            "desc": "Color shows the chosen wave: triangle = red, downward saw = yellow, upward saw = orange, trapezoid = green, stepped random = blue, smooth random = turquoise."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Get four random voltages",
+            "steps": [
+              "Press the WAVE button until the WAVE LED is blue (stepped random) or turquoise (smooth random).",
+              "Patch each channel's ASGN output to a modulation destination.",
+              "Set each channel's rate with its slider to control how often values change."
+            ]
+          },
+          {
+            "goal": "Use a sawtooth ramp for envelopes",
+            "steps": [
+              "Press WAVE until the LED is orange (upward saw) or yellow (downward saw).",
+              "Patch the channel's ASGN output out.",
+              "Adjust the slider for the ramp time."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Reset And Sync",
+        "body": [
+          "The RESET SYNC inputs can either hard-reset a channel's phase or tap-tempo sync it to an incoming clock. One central SYNC LED shows which method is active for the whole module."
+        ],
+        "controls": [
+          {
+            "name": "RESET SYNC (A-D)",
+            "type": "jack-in",
+            "desc": "Per-channel input. Resetting channel A restarts the whole synchronous group; resetting B/C/D affects only that channel."
+          },
+          {
+            "name": "SYNC LED",
+            "type": "mode",
+            "desc": "Unlit = Reset method (restart phase on a trigger); lit = tap-tempo Sync (lock rate to the incoming clock)."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Lock Batumi to your clock",
+            "steps": [
+              "Toggle the sync method by holding one of the MODE/WAVE buttons and pressing the other until the central SYNC LED lights (Sync).",
+              "Patch your clock into a channel's RESET SYNC jack.",
+              "That channel now follows the clock tempo; use rising-edge triggers for best accuracy."
+            ]
+          },
+          {
+            "goal": "Re-zero an LFO on demand",
+            "steps": [
+              "Set the sync method to Reset: hold one button and press the other until the central SYNC LED is unlit.",
+              "Send a trigger into the channel's RESET SYNC jack to restart its cycle from zero."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Range And V/Oct",
+        "body": [
+          "Sliders alone cover 0.01-100 Hz. With CV patched the range widens enormously, from cycles many hours long down at low CV up to roughly 5 kHz, and channels track V/oct so they can act as oscillators."
+        ],
+        "controls": [
+          {
+            "name": "FRQ PH RTO",
+            "type": "jack-in",
+            "desc": "In Free/Divide/Mult modes this is the V/oct-tracking frequency CV; feed a keyboard or sequencer for pitched tones."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Play Batumi as a rough oscillator",
+            "steps": [
+              "Press MODE until the LED is red (Free mode).",
+              "Patch a V/oct sequencer or keyboard into a channel's FRQ PH RTO jack.",
+              "Raise the slider so the channel reaches audio rate, then take the SINE output to a VCA/filter."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Poti II Expander",
+        "body": [
+          "Poti II (4 HP) adds hands-on control Batumi II lacks: attenuators for the CV and audio signals, per-channel ASGN waveform selection, and CV inputs that reshape each channel's wave."
+        ],
+        "controls": [
+          {
+            "name": "Attenuators",
+            "type": "knob",
+            "desc": "Per-channel attenuation of the frequency/phase/ratio CV inputs and the output signals."
+          },
+          {
+            "name": "Per-channel WAVE select",
+            "type": "mode",
+            "desc": "Independently choose the ASGN waveform on each channel, instead of one shared shape."
+          },
+          {
+            "name": "Shape CV in",
+            "type": "jack-in",
+            "desc": "Assignable inputs that modulate each channel's waveform shape with voltage."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Install and connect Poti II",
+            "steps": [
+              "Power down the rack and leave 4 HP free next to Batumi II.",
+              "Connect the supplied 2-wire ribbon between Batumi II and Poti II (Batumi II powers it; Poti II needs no bus-board connection).",
+              "Fasten both modules with screws before powering up."
+            ]
+          },
+          {
+            "goal": "Tame a hot modulation CV",
+            "steps": [
+              "With Poti II connected, patch the CV into the channel's FRQ PH RTO input.",
+              "Turn down that channel's Poti II attenuator until the modulation depth feels right."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Original Batumi And Poti",
+        "body": [
+          "The first-generation Batumi runs firmware 2.x with Free, Quadrature, Phase, and Divide modes, and selects its assignable wave via a rear ASGN jumper. The original 3 HP Poti breaks that jumper and the reset/sync choice out to the front panel."
+        ],
+        "controls": [
+          {
+            "name": "ASGN jumper (original)",
+            "type": "switch",
+            "desc": "Rear-panel jumper on the first Batumi that sets which waveform the ASGN outputs produce; Batumi II replaces it with the front WAVE button."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Change the assignable wave on an original Batumi",
+            "steps": [
+              "Power down and remove the module.",
+              "Move the rear ASGN jumper to the position for the wave you want.",
+              "Reinstall, or fit the original Poti expander to switch it from the front instead."
+            ]
+          }
+        ]
+      }
+    ],
+    "hotspots": {
+      "slider": {
+        "x": 0.5,
+        "y": 0.24,
+        "rx": 0.17,
+        "ry": 0.085
+      },
+      "mode": {
+        "x": 0.335,
+        "y": 0.385,
+        "r": 0.035
+      },
+      "wave": {
+        "x": 0.665,
+        "y": 0.385,
+        "r": 0.035
+      },
+      "frq": {
+        "x": 0.5,
+        "y": 0.445,
+        "rx": 0.17,
+        "ry": 0.035
+      },
+      "reset": {
+        "x": 0.5,
+        "y": 0.55,
+        "rx": 0.17,
+        "ry": 0.035
+      },
+      "sine": {
+        "x": 0.5,
+        "y": 0.655,
+        "rx": 0.17,
+        "ry": 0.035
+      },
+      "asgn": {
+        "x": 0.5,
+        "y": 0.755,
+        "rx": 0.17,
+        "ry": 0.035
+      },
+      "rect": {
+        "x": 0.5,
+        "y": 0.855,
+        "rx": 0.17,
+        "ry": 0.035
+      }
+    },
+    "outcomes": [
+      {
+        "title": "Four free-running LFOs",
+        "si": 0,
+        "hi": 0
+      },
+      {
+        "title": "Voltage-control an LFO's speed",
+        "si": 1,
+        "hi": 0
+      },
+      {
+        "title": "Phase-shifted copies of one LFO",
+        "si": 2,
+        "hi": 0
+      },
+      {
+        "title": "Clock-divided modulation",
+        "si": 2,
+        "hi": 1
+      },
+      {
+        "title": "Faster, multiplied channels",
+        "si": 2,
+        "hi": 2
+      },
+      {
+        "title": "Four random voltages",
+        "si": 3,
+        "hi": 0
+      },
+      {
+        "title": "Lock Batumi to your clock",
+        "si": 4,
+        "hi": 0
+      },
+      {
+        "title": "Play it as an oscillator",
+        "si": 5,
+        "hi": 0
+      }
+    ]
   }
 ];
 
