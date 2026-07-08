@@ -415,12 +415,12 @@ function viewPanel(m) {
   const hsKeys = Object.keys(HS);
   const ctrls = uniqueControls(m);
 
-  // Assign each hotspot a number and try to attach it to a control entry.
-  const markers = hsKeys.map((k, i) => {
-    const ctrl = ctrls.find((c) => c.name.toLowerCase().includes(k.toLowerCase()));
-    return { n: i + 1, key: k, h: HS[k], ctrl };
-  });
-  const markerFor = (c) => markers.find((mk) => mk.ctrl === c);
+  // Number the markers in panel reading order (top→bottom, then left→right),
+  // so 1·2·3 follow the panel and the legend can read in order.
+  const markers = hsKeys
+    .map((k) => ({ key: k, h: HS[k], ctrl: ctrls.find((c) => c.name.toLowerCase().includes(k.toLowerCase())) }))
+    .sort((a, b) => a.h.y - b.h.y || a.h.x - b.h.x)
+    .map((mk, i) => ({ ...mk, n: i + 1 }));
 
   const rings = markers
     .map((mk) => {
@@ -430,23 +430,42 @@ function viewPanel(m) {
     })
     .join("");
 
+  // Numbered legend, in order 1..N (every dot gets a row, even unmatched keys).
+  const numberedRows = markers
+    .map((mk) => {
+      const c = mk.ctrl;
+      const name = c ? c.name : mk.key;
+      const type = c ? c.type : "mode";
+      const desc = c ? c.desc : "";
+      return `<div class="ctrl pg-row" id="pg-${mk.n}" data-mark="${mk.n}">
+        <dt><span class="pg-num">${mk.n}</span><span class="ctrl-name">${esc(name)}</span><span class="ctrl-type type-${type}">${esc(TYPE_LABEL[type] || type)}</span></dt>
+        <dd>${esc(desc)}</dd>
+      </div>`;
+    })
+    .join("");
+  const numberedBlock = numberedRows
+    ? `<div class="ctrl-list-label">On the panel</div><dl class="ctrl-list">${numberedRows}</dl>`
+    : "";
+
+  // Remaining controls (no panel marker), grouped by type.
+  const marked = new Set(markers.filter((mk) => mk.ctrl).map((mk) => mk.ctrl.name));
+  const rest = ctrls.filter((c) => !marked.has(c.name));
   const GROUPS = [
     ["knob", "Knobs"], ["button", "Buttons"], ["switch", "Switches"],
     ["jack-in", "Inputs"], ["jack-out", "Outputs"], ["mode", "Modes & menus"], ["model", "Models"]
   ];
-  const legend = GROUPS.map(([type, label]) => {
-    const rows = ctrls
+  const restBlocks = GROUPS.map(([type, label]) => {
+    const rows = rest
       .filter((c) => c.type === type)
-      .map((c) => {
-        const mk = markerFor(c);
-        return `<div class="ctrl pg-row" ${mk ? `id="pg-${mk.n}" data-mark="${mk.n}"` : ""}>
-          <dt>${mk ? `<span class="pg-num">${mk.n}</span>` : `<span class="pg-num pg-num--none"></span>`}<span class="ctrl-name">${esc(c.name)}</span><span class="ctrl-type type-${c.type}">${esc(TYPE_LABEL[c.type] || c.type)}</span></dt>
-          <dd>${esc(c.desc)}</dd>
-        </div>`;
-      })
+      .map((c) => `<div class="ctrl">
+        <dt><span class="pg-num pg-num--none"></span><span class="ctrl-name">${esc(c.name)}</span><span class="ctrl-type type-${c.type}">${esc(TYPE_LABEL[c.type] || c.type)}</span></dt>
+        <dd>${esc(c.desc)}</dd>
+      </div>`)
       .join("");
     return rows ? `<div class="ctrl-list-label">${label}</div><dl class="ctrl-list">${rows}</dl>` : "";
   }).join("");
+  const restBlock = rest.length ? `<div class="section-title pg-more-title">Other controls</div>${restBlocks}` : "";
+  const legend = numberedBlock + restBlock;
 
   return `${moduleNav(m, "/panel")}
     <div class="detail-top">
