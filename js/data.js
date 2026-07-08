@@ -1452,6 +1452,15 @@ const MODULES = [
               "Turn the Layer Knob to the desired scene slot (past the local six for the USB banks).",
               "Double-tap the Shift Button to save; saving is non-destructive and the menu exits when finished."
             ]
+          },
+          {
+            "goal": "Load a scene from the USB drive",
+            "steps": [
+              "With the USB drive fitted, hold Shift, then Capture, then Strike (in that order) to open the Load/Save Menu.",
+              "Page with the Capture/Strike buttons to the Load Scenes page (yellow and red display).",
+              "Turn the Layer Knob to the scene slot you want; hold Shift to preview it.",
+              "Double-tap Shift to load — the scene's six layers and settings load and the menu exits."
+            ]
           }
         ]
       },
@@ -1567,6 +1576,11 @@ const MODULES = [
         "title": "Clock your patch from the loop",
         "si": 7,
         "hi": 1
+      },
+      {
+        "title": "Load a scene",
+        "si": 13,
+        "hi": 3
       }
     ]
   },
