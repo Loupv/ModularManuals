@@ -5359,9 +5359,571 @@ const MODULES = [
         "hi": 0
       }
     ]
+  },
+  {
+    "id": "marbles",
+    "name": "Marbles",
+    "manufacturer": "Mutable Instruments",
+    "hp": 18,
+    "tagline": "Two families of tamed randomness",
+    "manualUrl": "https://pichenettes.github.io/mutable-instruments-documentation/modules/marbles/manual/",
+    "overview": "A random sampler that generates two correlated families of signals: t random gates and X random CV, all shapeable and loopable. Turn a clock into evolving, musical, in-key randomness that you can lock into repeating sequences.",
+    "specs": {
+      "Width": "18 HP",
+      "Depth": "25 mm",
+      "Power": "+12V 80 mA / -12V 20 mA",
+      "Outputs": "7 (t1-t3 gates, X1-X3 CV, Y)"
+    },
+    "sections": [
+      {
+        "title": "What it is",
+        "body": [
+          "Two random engines share one philosophy: controllable, correlated chance.",
+          "The t section makes random gates; the X section makes random voltages.",
+          "DEJA VU can freeze any of that randomness into a repeating loop."
+        ],
+        "controls": [],
+        "howtos": [
+          {
+            "goal": "Get generative music instantly",
+            "steps": [
+              "Patch t1 to an envelope or drum trigger and X1 to a v/oct pitch input.",
+              "Set the built-in RATE clock and turn STEPS clockwise to snap X to a scale.",
+              "Ride SPREAD and BIAS to taste, then add DEJA VU to lock a phrase."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "t section (random gates)",
+        "body": [
+          "Turns a clock (internal or external) into three related trigger streams.",
+          "t2 is the steady master clock; t1 and t3 are the random offspring."
+        ],
+        "controls": [
+          {
+            "name": "RATE",
+            "type": "knob",
+            "desc": "Internal clock tempo, 120 BPM at noon; the CV input tracks 1V/octave.",
+            "tip": "Patch an external clock to t CLOCK to sync to your rig instead."
+          },
+          {
+            "name": "CLOCK RANGE",
+            "type": "button",
+            "desc": "Divides or multiplies the whole t rate by 4 for slow or fast ranges.",
+            "tip": "Use it to reach very slow LFO-style gates or fast bursts."
+          },
+          {
+            "name": "JITTER",
+            "type": "knob",
+            "desc": "Adds increasing randomness to the timing of the gates.",
+            "tip": "A touch of jitter humanizes a stiff clock."
+          },
+          {
+            "name": "BIAS",
+            "type": "knob",
+            "desc": "Sets how gates are shared between t1 and t3, and their gate length.",
+            "tip": "Full one way sends everything to t1, full the other to t3."
+          },
+          {
+            "name": "t model",
+            "type": "button",
+            "desc": "Picks the gate-splitting algorithm: coin toss, random ratio, or drum pattern.",
+            "tip": "Long-press for hidden variants (see Hidden settings)."
+          },
+          {
+            "name": "t CLOCK",
+            "type": "jack-in",
+            "desc": "External clock input; overrides the internal RATE oscillator.",
+            "tip": "Marbles then generates its randomness in time with your clock."
+          },
+          {
+            "name": "t1",
+            "type": "jack-out",
+            "desc": "Random gate output, one of the two children of t2.",
+            "tip": "Great for a kick or a bass-note trigger."
+          },
+          {
+            "name": "t2",
+            "type": "jack-out",
+            "desc": "Master clock output with a constant 50 percent duty cycle.",
+            "tip": "Use as a rock-steady clock reference for the rest of your patch."
+          },
+          {
+            "name": "t3",
+            "type": "jack-out",
+            "desc": "The complementary random gate to t1.",
+            "tip": "Pair with t1 for kick and snare."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Make a random kick and snare drum pattern",
+            "steps": [
+              "Long-press t model until its LED blinks red (three-states mode).",
+              "Patch t1 to a kick trigger and t3 to a snare trigger.",
+              "Set BIAS to balance the two and JITTER low for a tight groove."
+            ]
+          },
+          {
+            "goal": "Humanize a stiff clock",
+            "steps": [
+              "Feed your clock into t CLOCK and take t2 as the output.",
+              "Turn JITTER up slightly to loosen the timing.",
+              "Use t1 or t3 for occasional random accents."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "X section (random CV)",
+        "body": [
+          "Generates three random voltages sharing one probability distribution.",
+          "Shape their spread, skew, and quantization, then vary how alike the three outputs are."
+        ],
+        "controls": [
+          {
+            "name": "SPREAD",
+            "type": "knob",
+            "desc": "Sets the distribution shape from a narrow peak, to a bell at noon, to uniform, to bimodal.",
+            "tip": "Wide spread gives wild jumps; narrow gives values that hug the bias point."
+          },
+          {
+            "name": "X BIAS",
+            "type": "knob",
+            "desc": "Skews the random voltages toward low or high values.",
+            "tip": "Think of it as the average pitch or level of the output."
+          },
+          {
+            "name": "STEPS",
+            "type": "knob",
+            "desc": "Goes from smooth to quantized, then strips the scale down to fewer notes.",
+            "tip": "Full clockwise leaves only the root note and its octaves."
+          },
+          {
+            "name": "voltage range",
+            "type": "button",
+            "desc": "Selects the X output range: 0 to +2V, 0 to +5V, or -5 to +5V.",
+            "tip": "Use 0 to +5V for pitch over five octaves; -5 to +5V for modulation."
+          },
+          {
+            "name": "X spread",
+            "type": "button",
+            "desc": "Sets how alike X1, X2, X3 are; independent, or mirrored around X2.",
+            "tip": "Green independent; yellow keeps X1/X3 opposite to X2; red centers X2."
+          },
+          {
+            "name": "X CV",
+            "type": "jack-in",
+            "desc": "SPREAD CV input; also the audio/CV input for external processing mode.",
+            "tip": "STEPS, SPREAD and X BIAS each have their own CV input too."
+          },
+          {
+            "name": "X CLOCK",
+            "type": "jack-in",
+            "desc": "Clocks the X section independently from t.",
+            "tip": "Leave unpatched to let X follow t2 internally."
+          },
+          {
+            "name": "X1",
+            "type": "jack-out",
+            "desc": "First random CV output.",
+            "tip": "Classic random melody source when quantized."
+          },
+          {
+            "name": "X2",
+            "type": "jack-out",
+            "desc": "Central random CV output; drives the Y divider.",
+            "tip": "In mirrored modes the other two react around this one."
+          },
+          {
+            "name": "X3",
+            "type": "jack-out",
+            "desc": "Third random CV output.",
+            "tip": "Use three X outputs for chords or three independent voices."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Generate a stream of random voltages",
+            "steps": [
+              "Patch X1 to whatever you want to modulate.",
+              "Set SPREAD for how wild and X BIAS for the average level.",
+              "Leave STEPS fully counter-clockwise for smooth continuous values."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "DEJA VU (loop and lock)",
+        "body": [
+          "DEJA VU is a probability knob: how likely the next value repeats the last loop.",
+          "It can freeze a lucky random moment into a repeating sequence you keep."
+        ],
+        "controls": [
+          {
+            "name": "DEJA VU",
+            "type": "knob",
+            "desc": "From 7 o'clock fully random, to a locked loop at noon, to random jumps within the loop by 5 o'clock.",
+            "tip": "Noon means the current sequence repeats verbatim."
+          },
+          {
+            "name": "LENGTH",
+            "type": "knob",
+            "desc": "Sets the loop length; 5, 7, 10 and 14 sit between the marked graduations.",
+            "tip": "Short lengths give tight riffs, long lengths give evolving phrases."
+          },
+          {
+            "name": "DEJA VU t",
+            "type": "button",
+            "desc": "Applies the DEJA VU loop to the t (gates) section.",
+            "tip": "Enable t, X, both, or neither in any combination."
+          },
+          {
+            "name": "DEJA VU X",
+            "type": "button",
+            "desc": "Applies the DEJA VU loop to the X (CV) section.",
+            "tip": "Double-press while looping to reseed with a fresh sequence."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Lock a random sequence into a loop",
+            "steps": [
+              "Enable DEJA VU for the section you want with the t or X button.",
+              "Wait for a phrase you like, then turn the DEJA VU knob to noon.",
+              "Set LENGTH to choose how many steps repeat."
+            ]
+          },
+          {
+            "goal": "Reseed a locked loop for fresh variation",
+            "steps": [
+              "With a loop running, rapidly double-press the DEJA VU t or X button.",
+              "Marbles rolls a brand-new sequence at the same length.",
+              "Nudge the knob past noon for gentle random jumps instead of a full reseed."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Quantizer and scales",
+        "body": [
+          "The X outputs can snap random voltages to musical scales via STEPS.",
+          "Six memory slots hold scales, pre-loaded and rooted at C (0V)."
+        ],
+        "controls": [
+          {
+            "name": "scale select",
+            "type": "mode",
+            "desc": "Hold the voltage-range button 2 seconds, then press repeatedly to pick a scale.",
+            "tip": "Factory scales: Major, Minor, Pentatonic, Gamelan (Pelog), Raag Bhairav, Raag Shree."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Play a random melody in a scale",
+            "steps": [
+              "Patch an X output to a v/oct pitch input.",
+              "Turn STEPS clockwise past noon to quantize to the current scale.",
+              "Hold the range button and press to choose Major, Minor or another scale."
+            ]
+          },
+          {
+            "goal": "Record your own custom scale",
+            "steps": [
+              "Patch a keyboard's CV to X CV (SPREAD) and its gate to X CLOCK.",
+              "Hold the external-mode button for 2 seconds to start learning.",
+              "Play at least 50 notes in your scale, then press the button to save."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Y output (slow random)",
+        "body": [
+          "Y is a bonus fourth random source, smooth and full-range by default.",
+          "It is clocked at 1/16 the rate of X2 and never affected by DEJA VU."
+        ],
+        "controls": [
+          {
+            "name": "Y",
+            "type": "jack-out",
+            "desc": "Smooth -5V to +5V random voltage clocked slower than the X section.",
+            "tip": "Perfect for slow, always-fresh background modulation."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Get slow evolving modulation",
+            "steps": [
+              "Patch Y to a filter cutoff or another slow-moving destination.",
+              "Because Y ignores DEJA VU, it keeps drifting even while t and X loop.",
+              "Adjust its divider and range in the hidden Y settings if needed."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "External processing mode",
+        "body": [
+          "Instead of internal randomness, Marbles can sample and process voltages you feed in.",
+          "It becomes a random quantizer, sample and hold, or shift register for external signals."
+        ],
+        "controls": [
+          {
+            "name": "external mode",
+            "type": "mode",
+            "desc": "Press to sample the SPREAD CV input whenever an X value is needed.",
+            "tip": "X BIAS becomes transposition and SPREAD sets the transposition range."
+          }
+        ],
+        "howtos": [
+          {
+            "goal": "Quantize an external melody",
+            "steps": [
+              "Press the external-mode button and patch your melody CV into X CV.",
+              "Turn STEPS clockwise to snap the incoming notes to a scale.",
+              "Use X BIAS to transpose and take X1 as the quantized output."
+            ]
+          },
+          {
+            "goal": "Use Marbles as a random sample and hold",
+            "steps": [
+              "Enable external mode and set the X spread button to its first (green) position.",
+              "Clock the X section externally and feed a signal into X CV.",
+              "X2 holds X1 delayed one clock, X3 holds X2, forming a shift register."
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Hidden settings",
+        "body": [
+          "Long-presses on the mode buttons reveal alternate engines and deeper parameters.",
+          "A blinking LED colour tells you which hidden variant is active."
+        ],
+        "controls": [],
+        "howtos": [
+          {
+            "goal": "Unlock the hidden t-model variants",
+            "steps": [
+              "Long-press the t model button to reveal a blinking variant.",
+              "Green is independent Bernoulli, orange a deterministic divider/multiplier, red three-states.",
+              "A short press returns the LED to the normal solid-colour mode."
+            ]
+          },
+          {
+            "goal": "Change the X output voltage range",
+            "steps": [
+              "Press the voltage-range button to cycle the range.",
+              "Choose 0 to +2V, 0 to +5V, or -5 to +5V.",
+              "Pick 0 to +5V for five octaves of pitch."
+            ]
+          },
+          {
+            "goal": "Tune the Y clock divider and shape",
+            "steps": [
+              "Hold the X spread button to enter the Y settings.",
+              "Set the Y division relative to X2, anywhere from 1/64 up to 1.",
+              "Adjust Y's own SPREAD, BIAS and STEPS from the same hidden menu."
+            ]
+          }
+        ]
+      }
+    ],
+    "outcomes": [
+      {
+        "title": "Get instant generative music",
+        "si": 0,
+        "hi": 0
+      },
+      {
+        "title": "Play a random melody in key",
+        "si": 4,
+        "hi": 0
+      },
+      {
+        "title": "Lock a random sequence into a loop",
+        "si": 3,
+        "hi": 0
+      },
+      {
+        "title": "Reseed a loop for fresh variation",
+        "si": 3,
+        "hi": 1
+      },
+      {
+        "title": "Make a random kick and snare pattern",
+        "si": 1,
+        "hi": 0
+      },
+      {
+        "title": "Get slow evolving modulation from Y",
+        "si": 5,
+        "hi": 0
+      },
+      {
+        "title": "Record your own scale",
+        "si": 4,
+        "hi": 1,
+        "hidden": true
+      },
+      {
+        "title": "Quantize an external melody",
+        "si": 6,
+        "hi": 0,
+        "hidden": true
+      },
+      {
+        "title": "Unlock the hidden t-model variants",
+        "si": 7,
+        "hi": 0,
+        "hidden": true
+      }
+    ],
+    "trivia": [
+      {
+        "title": "Open-source by design",
+        "fact": "Like every Mutable Instruments module, Marbles ships with fully open-source hardware and firmware, spawning many DIY and community clones."
+      },
+      {
+        "title": "A hidden Markov mode",
+        "fact": "The firmware contains a commented-out Markov-chain rhythm generator that never shipped as a selectable t mode."
+      },
+      {
+        "title": "DEJA VU is literally probability",
+        "fact": "The DEJA VU knob is a probability control: 0 is completely random, and noon is a fully locked, repeating loop."
+      },
+      {
+        "title": "It learns scales by ear",
+        "fact": "Play 50 or more notes into it and Marbles builds a custom scale, keeping your most-played notes and dropping the rest as STEPS turns up."
+      }
+    ],
+    "hotspots": {
+      "deja vu": {
+        "x": 0.498,
+        "y": 0.195,
+        "r": 0.048
+      },
+      "deja vu t": {
+        "x": 0.318,
+        "y": 0.188,
+        "r": 0.026
+      },
+      "deja vu x": {
+        "x": 0.702,
+        "y": 0.188,
+        "r": 0.026
+      },
+      "rate": {
+        "x": 0.356,
+        "y": 0.293,
+        "r": 0.072
+      },
+      "spread": {
+        "x": 0.643,
+        "y": 0.293,
+        "r": 0.072
+      },
+      "t model": {
+        "x": 0.268,
+        "y": 0.335,
+        "r": 0.026
+      },
+      "x spread": {
+        "x": 0.735,
+        "y": 0.335,
+        "r": 0.026
+      },
+      "length": {
+        "x": 0.498,
+        "y": 0.4,
+        "r": 0.045
+      },
+      "bias": {
+        "x": 0.264,
+        "y": 0.459,
+        "r": 0.05
+      },
+      "x bias": {
+        "x": 0.737,
+        "y": 0.459,
+        "r": 0.05
+      },
+      "clock range": {
+        "x": 0.376,
+        "y": 0.474,
+        "r": 0.024
+      },
+      "voltage range": {
+        "x": 0.625,
+        "y": 0.474,
+        "r": 0.024
+      },
+      "jitter": {
+        "x": 0.405,
+        "y": 0.527,
+        "r": 0.05
+      },
+      "steps": {
+        "x": 0.586,
+        "y": 0.527,
+        "r": 0.05
+      },
+      "t clock": {
+        "x": 0.264,
+        "y": 0.608,
+        "r": 0.03
+      },
+      "x clock": {
+        "x": 0.737,
+        "y": 0.608,
+        "r": 0.03
+      },
+      "x cv": {
+        "x": 0.652,
+        "y": 0.706,
+        "r": 0.03
+      },
+      "t1": {
+        "x": 0.264,
+        "y": 0.806,
+        "r": 0.03
+      },
+      "t2": {
+        "x": 0.342,
+        "y": 0.806,
+        "r": 0.03
+      },
+      "t3": {
+        "x": 0.422,
+        "y": 0.806,
+        "r": 0.03
+      },
+      "y": {
+        "x": 0.5,
+        "y": 0.806,
+        "r": 0.03
+      },
+      "x1": {
+        "x": 0.576,
+        "y": 0.806,
+        "r": 0.03
+      },
+      "x2": {
+        "x": 0.652,
+        "y": 0.806,
+        "r": 0.03
+      },
+      "x3": {
+        "x": 0.73,
+        "y": 0.806,
+        "r": 0.03
+      }
+    },
+    "image": "images/marbles.jpg"
   }
 ];
 
-const TRIVIA = MODULES.flatMap((m) =>
-  m.trivia.map((t) => ({ module: m.name, moduleId: m.id, title: t.title, fact: t.fact }))
-);
+// Flattened trivia across every module for the "Did You Know?" view.
+const TRIVIA = MODULES.flatMap((m) => m.trivia.map((t) => ({ module: m.name, moduleId: m.id, title: t.title, fact: t.fact })));
