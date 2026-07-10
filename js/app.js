@@ -629,91 +629,91 @@ function shuffleFeature() {
 // Keep steps to short, plain sentences — inspiration, not a manual.
 const PATCHES = [
   {
-    id: "self-playing",
-    title: "Self-playing melody",
-    get: "A line that wanders and never quite repeats.",
-    modules: ["pams", "plaits", "fxaidxl"],
+    id: "self-writing-voice",
+    title: "Self-writing generative voice",
+    get: "A melody that composes and re-colours itself.",
+    modules: ["marbles", "plaits", "batumi"],
     steps: [
-      "Pam's: one channel as clock, one as a Euclidean gate, one as a quantised random CV.",
-      "Random CV → Plaits V/OCT · gate → Plaits TRIG.",
-      "Plaits out → FX Aid XL; dial in a long reverb or delay."
+      "Marbles: raise STEPS to quantise X1 → Plaits V/OCT, t1 → TRIG.",
+      "Batumi in Quadrature mode → Plaits TIMBRE and MORPH so the tone orbits.",
+      "Turn Marbles DÉJÀ VU to noon to lock a phrase, back off to wander."
     ]
   },
   {
-    id: "in-key-harmony",
-    title: "Locked-in-key harmony",
-    get: "Two voices that always land in your chosen key.",
-    modules: ["harmonaig", "plaits", "rings"],
-    steps: [
-      "Send any melody CV → Harmonaig, pick a key and scale.",
-      "Chord voice 1 → Plaits V/OCT · voice 2 → Rings V/OCT.",
-      "Trigger both from one gate — instant diatonic chords."
-    ]
-  },
-  {
-    id: "granular-cloud",
-    title: "Granular cloud from one note",
-    get: "A whole evolving pad grown from a single tone.",
-    modules: ["plaits", "arbhar", "fxaidxl"],
-    steps: [
-      "Hold a Plaits drone → Arbhar audio in; capture a grain.",
-      "Raise density and length, scan the buffer, spray for width.",
-      "Arbhar out → FX Aid XL for shimmer or reverb."
-    ]
-  },
-  {
-    id: "dissolving-perc",
-    title: "Percussion that dissolves",
-    get: "Mallet hits that melt into texture.",
-    modules: ["pams", "rings", "beads"],
-    steps: [
-      "Pam's Euclidean gate → Rings strum · random CV → Rings V/OCT.",
-      "Set Rings to a mallet or marimba voice.",
-      "Rings out → Beads; granulate the tails and freeze now and then."
-    ]
-  },
-  {
-    id: "modulate-everything",
-    title: "Modulate everything",
-    get: "Nothing stands still.",
-    modules: ["batumi", "plaits", "arbhar"],
-    steps: [
-      "Batumi in Free mode: four LFOs at different rates (or a Phase mode for related motion).",
-      "Ch A → Plaits TIMBRE · Ch B → MORPH.",
-      "Ch C → Arbhar scan · Ch D → an FX or filter CV."
-    ]
-  },
-  {
-    id: "looping-gestures",
-    title: "Hands-on looping gestures",
-    get: "Record a move, loop it, let it drive the patch.",
-    modules: ["gliss", "arbhar", "fxaidxl"],
-    steps: [
-      "GLISS: record a finger gesture as CV on a track, then loop it.",
-      "Loop → Arbhar scan (or Plaits pitch); add a second track for timbre.",
-      "Voice out → FX Aid XL to glue it together."
-    ]
-  },
-  {
-    id: "random-jam",
-    title: "Random generative jam",
-    get: "A melody that writes itself, then loops.",
-    modules: ["marbles", "plaits", "fxaidxl"],
-    steps: [
-      "Marbles: turn STEPS up to quantise X1, take t1 as a trigger.",
-      "X1 → Plaits V/OCT · t1 → Plaits TRIG.",
-      "Plaits out → FX Aid XL; add DÉJÀ VU to lock a phrase."
-    ]
-  },
-  {
-    id: "random-chords",
-    title: "Random chords in key",
-    get: "Chance harmony that always stays diatonic.",
+    id: "diatonic-chord-machine",
+    title: "Diatonic chord machine",
+    get: "Chance chords, voice-led, ringing on strings.",
     modules: ["marbles", "harmonaig", "rings"],
     steps: [
-      "Marbles X1 → Harmonaig root; set a key and scale.",
-      "A Harmonaig chord voice → Rings V/OCT.",
-      "Strum Rings with a Marbles t gate."
+      "Quantise Marbles X1 → Harmonaig root; set a key and scale.",
+      "Strum Harmonaig's four voices into Rings set to 4-voice polyphony.",
+      "Rings holds each note, ringing out an evolving in-key chord."
+    ]
+  },
+  {
+    id: "granular-feedback",
+    title: "Granular feedback drone",
+    get: "One tone that resonates into infinity.",
+    modules: ["plaits", "arbhar", "fxaidxl"],
+    steps: [
+      "Hold a Plaits tone → Arbhar; capture and layer grains.",
+      "Arbhar out → FX Aid XL, then feed a little of it back into Arbhar.",
+      "Ride scan and spray as the cloud slowly self-resonates."
+    ]
+  },
+  {
+    id: "physical-sequence",
+    title: "Physical-model sequence, in key",
+    get: "Mallet lines that dissolve into texture.",
+    modules: ["pams", "rings", "beads"],
+    steps: [
+      "Pam's quantiser CV → Rings V/OCT · Euclidean gate → strum.",
+      "Set Rings to sympathetic strings or a hidden model.",
+      "Rings → Beads; freeze and scan the tails into a bed."
+    ]
+  },
+  {
+    id: "hidden-wavetable",
+    title: "Hidden wavetable, set in motion",
+    get: "Wake a secret oscillator and modulate it.",
+    modules: ["beads", "batumi", "fxaidxl"],
+    steps: [
+      "Leave Beads' inputs unpatched ~10 s to wake its wavetable synth.",
+      "Batumi LFOs → Beads pitch and density for movement.",
+      "Into an FX Aid comb or pitch algorithm for extra harmonics."
+    ]
+  },
+  {
+    id: "hand-drawn-rig",
+    title: "Hand-drawn modulation rig",
+    get: "Your gestures conduct the whole voice.",
+    modules: ["gliss", "plaits", "batumi"],
+    steps: [
+      "GLISS: record a pitch line and a modulation curve on two tracks.",
+      "Pitch → Plaits V/OCT · curve → MORPH for motion no LFO makes.",
+      "Batumi resets on a GLISS gate track for rhythmic movement."
+    ]
+  },
+  {
+    id: "tempo-locked-chance",
+    title: "Quantised chance, tempo-locked",
+    get: "Generative, but always on the grid and in key.",
+    modules: ["pams", "marbles", "plaits"],
+    steps: [
+      "Pam's clock → Marbles t CLOCK; Marbles quantises X1 to a scale.",
+      "X1 → Plaits V/OCT · Marbles t1 → TRIG.",
+      "DÉJÀ VU locks bars; JITTER loosens the feel."
+    ]
+  },
+  {
+    id: "external-quantiser-chain",
+    title: "Teach-a-scale quantiser chain",
+    get: "Program a scale, then play it by chance.",
+    modules: ["gliss", "marbles", "rings"],
+    steps: [
+      "Play notes from GLISS into Marbles external mode to learn a scale.",
+      "Marbles quantised X1 → Rings V/OCT · a t gate → strum.",
+      "Put Rings on a hidden model for an unusual voice."
     ]
   }
 ];
@@ -739,62 +739,50 @@ function patchCardHTML(p) {
 // Pairwise module relations — the deck the slot machine draws from.
 // `a` feeds/relates to `b`; both are module ids. Every module appears at least once.
 const RELATIONS = [
-  { a: "pams", b: "plaits", title: "Clock a melody", get: "A tune that plays itself, in time.",
-    steps: ["Pam's: one channel a clock, one a quantised random CV.", "CV → Plaits V/OCT · clock → Plaits TRIG."] },
-  { a: "pams", b: "rings", title: "Strum some mallets", get: "Rhythmic mallet and string hits.",
-    steps: ["Pam's Euclidean gate → Rings strum.", "Quantised random CV → Rings V/OCT."] },
-  { a: "pams", b: "fxaidxl", title: "Delay in time", get: "Echoes locked to the beat.",
-    steps: ["Pam's clock → FX Aid XL clock in.", "Pick a tempo-synced delay; run a voice through it."] },
-  { a: "pams", b: "batumi", title: "LFOs on the grid", get: "Modulation that resets with the beat.",
-    steps: ["Pam's clock (or a division) → Batumi reset.", "The four LFOs now restart in time — no drift."] },
-  { a: "batumi", b: "plaits", title: "Hands-free timbre", get: "Plaits moves on its own.",
-    steps: ["Batumi ch A → Plaits TIMBRE · ch B → MORPH.", "Slow rates for drift, faster for wobble."] },
-  { a: "batumi", b: "arbhar", title: "Drifting scan", get: "The grain cloud wanders forever.",
-    steps: ["Batumi slow LFO → Arbhar scan.", "A second LFO → spray or length for width."] },
-  { a: "batumi", b: "beads", title: "Breathing texture", get: "A pad that inhales and exhales.",
-    steps: ["Batumi slow LFO → Beads density (or time).", "Keep it slow so the texture 'breathes'."] },
-  { a: "harmonaig", b: "plaits", title: "Chords, in key", get: "Always-diatonic harmony from one note.",
-    steps: ["Feed a melody → Harmonaig; set key and scale.", "A chord voice → Plaits V/OCT; trigger it."] },
-  { a: "harmonaig", b: "rings", title: "Chords on strings", get: "Struck chords that stay in key.",
-    steps: ["Harmonaig chord voice → Rings V/OCT.", "Strum Rings — it rings out in your scale."] },
-  { a: "plaits", b: "fxaidxl", title: "Wash it out", get: "Dry voice, big space.",
-    steps: ["Plaits out → FX Aid XL in.", "Dial a hall reverb or long delay."] },
-  { a: "plaits", b: "beads", title: "Granular pad", get: "One note becomes a shifting cloud.",
-    steps: ["A sustained Plaits tone → Beads in.", "Raise density and size; freeze to hold it."] },
-  { a: "plaits", b: "rings", title: "Excite the strings", get: "Plaits plays Rings like a pick.",
-    steps: ["Plaits out → Rings input (exciter).", "Set Rings to a string/modal voice; strum."] },
-  { a: "plaits", b: "arbhar", title: "Freeze a tone", get: "Capture a note and stretch it out.",
-    steps: ["Hold a Plaits tone → Arbhar audio in; capture.", "Scan the buffer; raise length and density."] },
-  { a: "rings", b: "beads", title: "Dissolving strings", get: "Plucks that melt into texture.",
-    steps: ["Rings out → Beads in.", "Granulate the tails; freeze now and then."] },
-  { a: "rings", b: "fxaidxl", title: "Room for strings", get: "Resonant voice, room to ring.",
-    steps: ["Rings out → FX Aid XL in.", "Add a plate or hall reverb."] },
-  { a: "arbhar", b: "fxaidxl", title: "Smear the cloud", get: "Granular haze, even hazier.",
-    steps: ["Arbhar out → FX Aid XL in.", "Reverb or shimmer to blur the grains."] },
-  { a: "gliss", b: "plaits", title: "Loop a phrase", get: "Play a line by hand, let it loop.",
-    steps: ["GLISS: record a CV melody on a track; loop it.", "Track CV → Plaits V/OCT · gate → TRIG."] },
-  { a: "gliss", b: "arbhar", title: "Gesture the scan", get: "Your finger move drives the grains.",
-    steps: ["GLISS: record a gesture as CV; loop it.", "GLISS CV → Arbhar scan."] },
-  { a: "beads", b: "fxaidxl", title: "Texture into space", get: "Granular bed, deep space.",
-    steps: ["Beads out → FX Aid XL in.", "A long reverb turns it into ambience."] },
-  { a: "marbles", b: "plaits", title: "Random melody in key", get: "Notes chosen by chance, snapped to a scale.",
-    steps: ["Marbles: raise STEPS to quantise X1.", "X1 → Plaits V/OCT · t1 → Plaits TRIG."] },
-  { a: "marbles", b: "rings", title: "Random mallets", get: "Struck notes that never repeat.",
-    steps: ["Marbles t gate → Rings strum.", "Quantised X1 → Rings V/OCT."] },
-  { a: "marbles", b: "arbhar", title: "Random grain scan", get: "The cloud jumps to new spots on its own.",
-    steps: ["Marbles X1 → Arbhar scan.", "A t gate triggers fresh grains."] },
-  { a: "marbles", b: "harmonaig", title: "Chance chords in key", get: "Random roots, always harmonised.",
-    steps: ["Marbles X1 → Harmonaig root.", "Set key and scale; take the four chord voices."] },
-  { a: "marbles", b: "batumi", title: "Sync the LFOs", get: "Modulation reset by the random clock.",
-    steps: ["Marbles t2 (steady clock) → Batumi reset.", "The four LFOs restart in time with t."] },
-  { a: "marbles", b: "fxaidxl", title: "Random FX motion", get: "Effects that drift by themselves.",
-    steps: ["Marbles Y (slow random) → an FX Aid XL CV input.", "A parameter now wanders, never repeating."] },
-  { a: "marbles", b: "beads", title: "Randomise the grains", get: "Texture that reshapes itself.",
-    steps: ["Marbles Y → Beads density (or size).", "Slow, smooth Y keeps the drift musical."] },
-  { a: "pams", b: "marbles", title: "Clock the randomness", get: "Chance events locked to your tempo.",
-    steps: ["Pam's clock → Marbles t CLOCK.", "Marbles now rolls its gates in time."] },
-  { a: "gliss", b: "marbles", title: "Quantise a gesture", get: "Your hand-drawn line, snapped to a scale.",
-    steps: ["Enable Marbles external mode; GLISS CV → X CV.", "Raise STEPS; take X1 as the quantised output."] }
+  { a: "pams", b: "plaits", title: "Quantised acid line", get: "A sequence that stays in key.",
+    steps: ["Set a Pam's channel to its quantiser and choose a scale.", "Quantised CV → Plaits V/OCT · a clocked gate → TRIG."] },
+  { a: "pams", b: "batumi", title: "Clock-locked modulation", get: "LFOs that ride the tempo, not drift.",
+    steps: ["Put Batumi in Divide mode; Pam's clock → Batumi reset.", "Each LFO now runs at a musical division of the beat."] },
+  { a: "pams", b: "marbles", title: "Tempo-locked chance", get: "Randomness that lands on the grid.",
+    steps: ["Pam's clock → Marbles t CLOCK.", "Ride Marbles BIAS and JITTER to reshape gate density in time."] },
+  { a: "pams", b: "rings", title: "Euclidean strum, in key", get: "Rhythmic hits that stay musical.",
+    steps: ["Pam's Euclidean gate → Rings strum.", "Pam's quantiser CV → Rings V/OCT so pitches lock to a scale."] },
+  { a: "batumi", b: "plaits", title: "Circular timbre motion", get: "The tone orbits instead of wobbling.",
+    steps: ["Batumi in Quadrature mode.", "Two 90°-offset outputs → Plaits TIMBRE and MORPH."] },
+  { a: "batumi", b: "rings", title: "Morphing resonance", get: "A body that never sits still.",
+    steps: ["Batumi sine and assignable outs → Rings structure and position.", "Send them opposite ways so the timbre keeps shifting."] },
+  { a: "batumi", b: "arbhar", title: "Related-motion scan", get: "The cloud wanders, but coherently.",
+    steps: ["Batumi in Phase mode → Arbhar scan and spray.", "The two moves stay locked in relation, not random."] },
+  { a: "batumi", b: "fxaidxl", title: "Effect as instrument", get: "The FX itself becomes the sound.",
+    steps: ["Load a pitch, comb or oscillator algorithm on FX Aid XL.", "Batumi → its two CV params so the effect self-plays."] },
+  { a: "marbles", b: "plaits", title: "Self-writing melody", get: "In-key notes you can lock into a loop.",
+    steps: ["Raise Marbles STEPS to quantise X1 → Plaits V/OCT.", "t1 → TRIG; turn DÉJÀ VU to noon to freeze the phrase."] },
+  { a: "marbles", b: "harmonaig", title: "Random SATB chords", get: "Chance roots, four-part voice leading.",
+    steps: ["Quantise Marbles X1, then → Harmonaig root.", "Take the four voice-led outputs as an evolving chord."] },
+  { a: "marbles", b: "arbhar", title: "Grain lottery", get: "The cloud reshuffles on random gates.",
+    steps: ["Marbles t gates trigger Arbhar grains; X1 → scan.", "Lock a favourite pass with Marbles DÉJÀ VU."] },
+  { a: "marbles", b: "batumi", title: "Chance-reset motion", get: "Modulation that re-phases at random.",
+    steps: ["Marbles t1 (random gate) → Batumi reset.", "The LFOs jump phase unpredictably for glitchy movement."] },
+  { a: "harmonaig", b: "plaits", title: "Stacked diatonic chords", get: "Chords on chords, all in key.",
+    steps: ["Harmonaig's lowest voice → Plaits V/OCT.", "Use Plaits' chord engine — it stacks a chord on top, in your key."] },
+  { a: "plaits", b: "rings", title: "Exciter into a hidden model", get: "Struck, blown, unusual bodies.",
+    steps: ["Plaits noise or pluck → Rings input (exciter).", "Switch Rings to a hidden model (FM voice, Western chords)."] },
+  { a: "plaits", b: "beads", title: "Two related voices, granulated", get: "A self-harmonising cloud.",
+    steps: ["Patch Plaits OUT and AUX (two related engines) → Beads L/R.", "Granulate; the pair drifts as one evolving texture."] },
+  { a: "rings", b: "beads", title: "Freeze the resonance", get: "A plucked body stretched into a drone.",
+    steps: ["Rings sympathetic-strings model → Beads in.", "Freeze and scan to hold the resonant tail forever."] },
+  { a: "beads", b: "fxaidxl", title: "Wavetable through weird FX", get: "A hidden oscillator meets an odd algorithm.",
+    steps: ["Leave Beads inputs unpatched ~10 s to wake its wavetable synth.", "Its output → an FX Aid granular or pitch-shift algorithm."] },
+  { a: "arbhar", b: "fxaidxl", title: "Smeared pitch cloud", get: "Granular haze pitched into new shapes.",
+    steps: ["Arbhar out → an FX Aid pitch-shift or shimmer algorithm.", "Modulate its two params for a moving, harmonised cloud."] },
+  { a: "fxaidxl", b: "beads", title: "Echo into freeze", get: "Snapshots of a delay, scanned.",
+    steps: ["An FX Aid delay → Beads in.", "Freeze the echo and scan the buffer for glitch textures."] },
+  { a: "gliss", b: "marbles", title: "Teach it your scale", get: "Quantise chance to notes you chose.",
+    steps: ["Marbles external mode; play notes from GLISS into X CV.", "It learns the scale; STEPS then snaps randomness to it."] },
+  { a: "gliss", b: "plaits", title: "Draw a modulation curve", get: "Hand-designed movement on repeat.",
+    steps: ["Record a slow gesture on a GLISS track as an LFO shape.", "Loop it → Plaits MORPH for motion no LFO would make."] },
+  { a: "gliss", b: "batumi", title: "Punctuate the LFOs", get: "Modulation that resets on your cue.",
+    steps: ["Record a gate pattern on a GLISS track.", "GLISS gate → Batumi reset to re-phase the LFOs rhythmically."] }
 ];
 
 let relIdx = 0;
