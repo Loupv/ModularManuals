@@ -120,7 +120,7 @@ function chipsHTML() {
 function viewHome() {
   return `<div class="home-hero">
       <h2>Modular Manuals</h2>
-      <p>A pocket reference for a small rack of Eurorack modules. Pick a module to walk through every control, jack and mode — or dip into <a data-route="#/did-you-know" class="route-link">Did You Know</a> for trivia.</p>
+      <p>A pocket reference for a small rack of Eurorack modules. Pick a module to walk through every control, jack and mode, grab a <a data-route="#/patches" class="route-link">Patch starter</a>, or dip into <a data-route="#/did-you-know" class="route-link">Did You Know</a> for trivia.</p>
     </div>
     <div class="filter-bar">
       <input type="search" id="search" class="search-input" placeholder="Search modules…" value="${esc(homeQuery)}" autocomplete="off">
@@ -624,6 +624,102 @@ function shuffleFeature() {
   el.querySelector(".src").textContent = "— " + t.module;
 }
 
+/* ---------- Patch starters ---------- */
+// Quick cross-module patch ideas. `modules` are module ids (chips link to them).
+// Keep steps to short, plain sentences — inspiration, not a manual.
+const PATCHES = [
+  {
+    id: "self-playing",
+    title: "Self-playing melody",
+    get: "A line that wanders and never quite repeats.",
+    modules: ["pams", "plaits", "fxaidxl"],
+    steps: [
+      "Pam's: one channel as clock, one as a Euclidean gate, one as a quantised random CV.",
+      "Random CV → Plaits V/OCT · gate → Plaits TRIG.",
+      "Plaits out → FX Aid XL; dial in a long reverb or delay."
+    ]
+  },
+  {
+    id: "in-key-harmony",
+    title: "Locked-in-key harmony",
+    get: "Two voices that always land in your chosen key.",
+    modules: ["harmonaig", "plaits", "rings"],
+    steps: [
+      "Send any melody CV → Harmonaig, pick a key and scale.",
+      "Chord voice 1 → Plaits V/OCT · voice 2 → Rings V/OCT.",
+      "Trigger both from one gate — instant diatonic chords."
+    ]
+  },
+  {
+    id: "granular-cloud",
+    title: "Granular cloud from one note",
+    get: "A whole evolving pad grown from a single tone.",
+    modules: ["plaits", "arbhar", "fxaidxl"],
+    steps: [
+      "Hold a Plaits drone → Arbhar audio in; capture a grain.",
+      "Raise density and length, scan the buffer, spray for width.",
+      "Arbhar out → FX Aid XL for shimmer or reverb."
+    ]
+  },
+  {
+    id: "dissolving-perc",
+    title: "Percussion that dissolves",
+    get: "Mallet hits that melt into texture.",
+    modules: ["pams", "rings", "beads"],
+    steps: [
+      "Pam's Euclidean gate → Rings strum · random CV → Rings V/OCT.",
+      "Set Rings to a mallet or marimba voice.",
+      "Rings out → Beads; granulate the tails and freeze now and then."
+    ]
+  },
+  {
+    id: "modulate-everything",
+    title: "Modulate everything",
+    get: "Nothing stands still.",
+    modules: ["batumi", "plaits", "arbhar"],
+    steps: [
+      "Batumi in Free mode: four LFOs at different rates (or a Phase mode for related motion).",
+      "Ch A → Plaits TIMBRE · Ch B → MORPH.",
+      "Ch C → Arbhar scan · Ch D → an FX or filter CV."
+    ]
+  },
+  {
+    id: "looping-gestures",
+    title: "Hands-on looping gestures",
+    get: "Record a move, loop it, let it drive the patch.",
+    modules: ["gliss", "arbhar", "fxaidxl"],
+    steps: [
+      "GLISS: record a finger gesture as CV on a track, then loop it.",
+      "Loop → Arbhar scan (or Plaits pitch); add a second track for timbre.",
+      "Voice out → FX Aid XL to glue it together."
+    ]
+  }
+];
+
+function patchCardHTML(p) {
+  const chips = p.modules
+    .map((id) => {
+      const m = MODULES.find((x) => x.id === id);
+      if (!m) return "";
+      return `<span class="pt-mod route-link" data-route="#/module/${m.id}" title="${esc(m.name)}">
+        <img src="${esc(m.image)}" alt="" loading="lazy"><span>${esc(m.name)}</span></span>`;
+    })
+    .join("");
+  const steps = p.steps.map((s) => `<li>${esc(s)}</li>`).join("");
+  return `<div class="pt-card">
+    <h3>${esc(p.title)}</h3>
+    <p class="pt-get">${esc(p.get)}</p>
+    <div class="pt-mods">${chips}</div>
+    <ol class="pt-steps">${steps}</ol>
+  </div>`;
+}
+
+function viewPatches() {
+  return `<div class="home-hero"><h2>Patch starters</h2>
+      <p>${PATCHES.length} quick combinations to get a sound going. Tap a module to open its card.</p></div>
+    <div class="pt-grid">${PATCHES.map(patchCardHTML).join("")}</div>`;
+}
+
 /* ---------- Router ---------- */
 function render() {
   const route = location.hash || "#/";
@@ -652,6 +748,9 @@ function render() {
   } else if (route === "#/did-you-know") {
     html = viewDidYouKnow();
     title = "Did You Know? — Modular Manuals";
+  } else if (route === "#/patches") {
+    html = viewPatches();
+    title = "Patch starters — Modular Manuals";
   } else {
     html = viewHome();
   }
@@ -666,7 +765,7 @@ function render() {
   const shuffle = document.getElementById("dyk-shuffle");
   if (shuffle) shuffle.addEventListener("click", shuffleFeature);
 
-  if (!route.startsWith("#/module/") && route !== "#/did-you-know") mountHome();
+  if (!route.startsWith("#/module/") && route !== "#/did-you-know" && route !== "#/patches") mountHome();
 
   applyPendingScroll();
 }

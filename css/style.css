@@ -490,6 +490,22 @@ a:hover { text-decoration: underline; }
 .dyk-card h4 { margin: 6px 0 6px; font-size: 0.98rem; }
 .dyk-card p { margin: 0; color: var(--text-dim); font-size: 0.88rem; }
 
+/* ---------- Patch starters ---------- */
+.pt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.pt-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+.pt-card h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.pt-get { margin: 0 0 14px; color: var(--text-dim); font-size: 0.88rem; }
+.pt-mods { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.pt-mod {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+  padding: 4px 11px 4px 4px; font-size: 0.76rem; color: var(--text); text-decoration: none;
+}
+.pt-mod:hover { border-color: var(--accent); text-decoration: none; }
+.pt-mod img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; background: #fff; }
+.pt-steps { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
+.pt-steps li { color: var(--text-dim); font-size: 0.86rem; line-height: 1.45; }
+
 /* ---------- Home ---------- */
 .home-hero { margin-bottom: 32px; }
 .home-hero h2 { font-size: 2.1rem; margin: 0 0 10px; }
