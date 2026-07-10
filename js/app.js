@@ -714,10 +714,159 @@ function patchCardHTML(p) {
   </div>`;
 }
 
+// Pairwise module relations — the deck the slot machine draws from.
+// `a` feeds/relates to `b`; both are module ids. Every module appears at least once.
+const RELATIONS = [
+  { a: "pams", b: "plaits", title: "Clock a melody", get: "A tune that plays itself, in time.",
+    steps: ["Pam's: one channel a clock, one a quantised random CV.", "CV → Plaits V/OCT · clock → Plaits TRIG."] },
+  { a: "pams", b: "rings", title: "Strum some mallets", get: "Rhythmic mallet and string hits.",
+    steps: ["Pam's Euclidean gate → Rings strum.", "Quantised random CV → Rings V/OCT."] },
+  { a: "pams", b: "fxaidxl", title: "Delay in time", get: "Echoes locked to the beat.",
+    steps: ["Pam's clock → FX Aid XL clock in.", "Pick a tempo-synced delay; run a voice through it."] },
+  { a: "pams", b: "batumi", title: "LFOs on the grid", get: "Modulation that resets with the beat.",
+    steps: ["Pam's clock (or a division) → Batumi reset.", "The four LFOs now restart in time — no drift."] },
+  { a: "batumi", b: "plaits", title: "Hands-free timbre", get: "Plaits moves on its own.",
+    steps: ["Batumi ch A → Plaits TIMBRE · ch B → MORPH.", "Slow rates for drift, faster for wobble."] },
+  { a: "batumi", b: "arbhar", title: "Drifting scan", get: "The grain cloud wanders forever.",
+    steps: ["Batumi slow LFO → Arbhar scan.", "A second LFO → spray or length for width."] },
+  { a: "batumi", b: "beads", title: "Breathing texture", get: "A pad that inhales and exhales.",
+    steps: ["Batumi slow LFO → Beads density (or time).", "Keep it slow so the texture 'breathes'."] },
+  { a: "harmonaig", b: "plaits", title: "Chords, in key", get: "Always-diatonic harmony from one note.",
+    steps: ["Feed a melody → Harmonaig; set key and scale.", "A chord voice → Plaits V/OCT; trigger it."] },
+  { a: "harmonaig", b: "rings", title: "Chords on strings", get: "Struck chords that stay in key.",
+    steps: ["Harmonaig chord voice → Rings V/OCT.", "Strum Rings — it rings out in your scale."] },
+  { a: "plaits", b: "fxaidxl", title: "Wash it out", get: "Dry voice, big space.",
+    steps: ["Plaits out → FX Aid XL in.", "Dial a hall reverb or long delay."] },
+  { a: "plaits", b: "beads", title: "Granular pad", get: "One note becomes a shifting cloud.",
+    steps: ["A sustained Plaits tone → Beads in.", "Raise density and size; freeze to hold it."] },
+  { a: "plaits", b: "rings", title: "Excite the strings", get: "Plaits plays Rings like a pick.",
+    steps: ["Plaits out → Rings input (exciter).", "Set Rings to a string/modal voice; strum."] },
+  { a: "plaits", b: "arbhar", title: "Freeze a tone", get: "Capture a note and stretch it out.",
+    steps: ["Hold a Plaits tone → Arbhar audio in; capture.", "Scan the buffer; raise length and density."] },
+  { a: "rings", b: "beads", title: "Dissolving strings", get: "Plucks that melt into texture.",
+    steps: ["Rings out → Beads in.", "Granulate the tails; freeze now and then."] },
+  { a: "rings", b: "fxaidxl", title: "Room for strings", get: "Resonant voice, room to ring.",
+    steps: ["Rings out → FX Aid XL in.", "Add a plate or hall reverb."] },
+  { a: "arbhar", b: "fxaidxl", title: "Smear the cloud", get: "Granular haze, even hazier.",
+    steps: ["Arbhar out → FX Aid XL in.", "Reverb or shimmer to blur the grains."] },
+  { a: "gliss", b: "plaits", title: "Loop a phrase", get: "Play a line by hand, let it loop.",
+    steps: ["GLISS: record a CV melody on a track; loop it.", "Track CV → Plaits V/OCT · gate → TRIG."] },
+  { a: "gliss", b: "arbhar", title: "Gesture the scan", get: "Your finger move drives the grains.",
+    steps: ["GLISS: record a gesture as CV; loop it.", "GLISS CV → Arbhar scan."] },
+  { a: "beads", b: "fxaidxl", title: "Texture into space", get: "Granular bed, deep space.",
+    steps: ["Beads out → FX Aid XL in.", "A long reverb turns it into ambience."] }
+];
+
+let relIdx = 0;
+const rnd = (n) => Math.floor(Math.random() * n);
+function pickRel(exclude) {
+  if (RELATIONS.length <= 1) return 0;
+  let i;
+  do { i = rnd(RELATIONS.length); } while (i === exclude);
+  return i;
+}
+// Reroll one reel, keeping the other module fixed (falls back to a fresh pair).
+function rerollReel(side) {
+  const cur = RELATIONS[relIdx];
+  const cand = RELATIONS
+    .map((r, i) => i)
+    .filter((i) => side === "a"
+      ? RELATIONS[i].b === cur.b && RELATIONS[i].a !== cur.a
+      : RELATIONS[i].a === cur.a && RELATIONS[i].b !== cur.b);
+  relIdx = cand.length ? cand[rnd(cand.length)] : pickRel(relIdx);
+}
+
+function reelFaceHTML(id) {
+  const m = MODULES.find((x) => x.id === id);
+  return `<span class="reel-face route-link" data-route="#/module/${m.id}" title="Open ${esc(m.name)}">
+      <img src="${esc(m.image)}" alt=""><span class="reel-name">${esc(m.name)}</span></span>`;
+}
+function slotHTML() {
+  const r = RELATIONS[relIdx];
+  return `<div class="slot" id="slot">
+      <div class="slot-reels">
+        <div class="reel" data-side="a">${reelFaceHTML(r.a)}<button class="reel-roll" data-roll="a" title="Reroll this module" aria-label="Reroll left module">⟳</button></div>
+        <div class="slot-arrow">→</div>
+        <div class="reel" data-side="b">${reelFaceHTML(r.b)}<button class="reel-roll" data-roll="b" title="Reroll this module" aria-label="Reroll right module">⟳</button></div>
+      </div>
+      <div class="slot-body">
+        <h3 class="slot-title">${esc(r.title)}</h3>
+        <p class="slot-get">${esc(r.get)}</p>
+        <ol class="slot-steps">${r.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+      </div>
+      <button class="btn slot-reroll" id="slot-reroll">🎲 Reroll</button>
+    </div>`;
+}
+
 function viewPatches() {
+  relIdx = pickRel(-1);
   return `<div class="home-hero"><h2>Patch starters</h2>
-      <p>${PATCHES.length} quick combinations to get a sound going. Tap a module to open its card.</p></div>
+      <p>Pull the reels for a two-module combo, and reroll until something sparks — or scroll down for full patches.</p></div>
+    ${slotHTML()}
+    <div class="section-title">Full patches</div>
     <div class="pt-grid">${PATCHES.map(patchCardHTML).join("")}</div>`;
+}
+
+// Re-render the slot in place (with a quick spin on the reels that changed).
+function refreshSlot(changed) {
+  const slot = document.getElementById("slot");
+  if (!slot) return;
+  const r = RELATIONS[relIdx];
+  slot.querySelector(".slot-title").textContent = r.title;
+  slot.querySelector(".slot-get").textContent = r.get;
+  slot.querySelector(".slot-steps").innerHTML = r.steps.map((s) => `<li>${esc(s)}</li>`).join("");
+  ["a", "b"].forEach((side) => {
+    if (!changed.includes(side)) return;
+    const reel = slot.querySelector(`.reel[data-side="${side}"]`);
+    const finalId = side === "a" ? r.a : r.b;
+    spinReel(reel, finalId);
+  });
+}
+function setFace(reel, id) {
+  const m = MODULES.find((x) => x.id === id);
+  const face = reel.querySelector(".reel-face");
+  face.setAttribute("data-route", "#/module/" + m.id);
+  face.setAttribute("title", "Open " + m.name);
+  face.querySelector("img").src = m.image;
+  face.querySelector(".reel-name").textContent = m.name;
+}
+function spinReel(reel, finalId) {
+  let n = 0;
+  const max = 6;
+  reel.classList.add("spinning");
+  const t = setInterval(() => {
+    n += 1;
+    if (n >= max) {
+      clearInterval(t);
+      setFace(reel, finalId);
+      reel.classList.remove("spinning");
+    } else {
+      setFace(reel, MODULES[rnd(MODULES.length)].id);
+    }
+  }, 55);
+}
+
+function mountPatches() {
+  const slot = document.getElementById("slot");
+  if (!slot) return;
+  slot.addEventListener("click", (e) => {
+    const rollOne = e.target.closest(".reel-roll");
+    if (rollOne) {
+      e.stopPropagation();
+      const side = rollOne.getAttribute("data-roll");
+      const before = RELATIONS[relIdx];
+      rerollReel(side);
+      const after = RELATIONS[relIdx];
+      // Spin the reel we rerolled, plus the other one only if the fallback changed it too.
+      const changed = ["a", "b"].filter((s) => before[s] !== after[s]);
+      refreshSlot(changed.length ? changed : [side]);
+      return;
+    }
+    if (e.target.closest("#slot-reroll")) {
+      relIdx = pickRel(relIdx);
+      refreshSlot(["a", "b"]);
+    }
+  });
 }
 
 /* ---------- Router ---------- */
@@ -764,6 +913,8 @@ function render() {
 
   const shuffle = document.getElementById("dyk-shuffle");
   if (shuffle) shuffle.addEventListener("click", shuffleFeature);
+
+  if (route === "#/patches") mountPatches();
 
   if (!route.startsWith("#/module/") && route !== "#/did-you-know" && route !== "#/patches") mountHome();
 

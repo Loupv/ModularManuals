@@ -506,6 +506,41 @@ a:hover { text-decoration: underline; }
 .pt-steps { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
 .pt-steps li { color: var(--text-dim); font-size: 0.86rem; line-height: 1.45; }
 
+/* Pick & reroll slot machine */
+.slot {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px; margin-bottom: 34px; max-width: 620px;
+}
+.slot-reels { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 18px; }
+.reel { position: relative; flex: 1; max-width: 190px; }
+.reel-face {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px 10px 12px; text-decoration: none; color: var(--text);
+}
+.reel-face:hover { border-color: var(--accent); text-decoration: none; }
+.reel-face img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: #fff; }
+.reel-name { font-size: 0.82rem; font-weight: 600; text-align: center; }
+.reel-roll {
+  position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-dim);
+  font-size: 0.9rem; line-height: 1; cursor: pointer; padding: 0;
+}
+.reel-roll:hover { border-color: var(--accent); color: var(--accent); }
+.reel.spinning .reel-face { opacity: 0.6; }
+.reel.spinning .reel-face img { animation: reel-spin 0.22s linear infinite; }
+@keyframes reel-spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+.slot-arrow { color: var(--text-faint); font-size: 1.3rem; flex-shrink: 0; }
+.slot-title { margin: 0 0 4px; font-size: 1.1rem; }
+.slot-get { margin: 0 0 12px; color: var(--text-dim); font-size: 0.9rem; }
+.slot-steps { margin: 0 0 20px; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
+.slot-steps li { color: var(--text-dim); font-size: 0.88rem; line-height: 1.45; }
+.slot-reroll { width: 100%; }
+@media (max-width: 520px) {
+  .reel-face img { width: 56px; height: 56px; }
+  .slot-arrow { font-size: 1rem; }
+}
+
 /* ---------- Home ---------- */
 .home-hero { margin-bottom: 32px; }
 .home-hero h2 { font-size: 2.1rem; margin: 0 0 10px; }
