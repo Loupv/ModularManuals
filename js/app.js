@@ -693,6 +693,28 @@ const PATCHES = [
       "Loop → Arbhar scan (or Plaits pitch); add a second track for timbre.",
       "Voice out → FX Aid XL to glue it together."
     ]
+  },
+  {
+    id: "random-jam",
+    title: "Random generative jam",
+    get: "A melody that writes itself, then loops.",
+    modules: ["marbles", "plaits", "fxaidxl"],
+    steps: [
+      "Marbles: turn STEPS up to quantise X1, take t1 as a trigger.",
+      "X1 → Plaits V/OCT · t1 → Plaits TRIG.",
+      "Plaits out → FX Aid XL; add DÉJÀ VU to lock a phrase."
+    ]
+  },
+  {
+    id: "random-chords",
+    title: "Random chords in key",
+    get: "Chance harmony that always stays diatonic.",
+    modules: ["marbles", "harmonaig", "rings"],
+    steps: [
+      "Marbles X1 → Harmonaig root; set a key and scale.",
+      "A Harmonaig chord voice → Rings V/OCT.",
+      "Strum Rings with a Marbles t gate."
+    ]
   }
 ];
 
@@ -754,7 +776,25 @@ const RELATIONS = [
   { a: "gliss", b: "arbhar", title: "Gesture the scan", get: "Your finger move drives the grains.",
     steps: ["GLISS: record a gesture as CV; loop it.", "GLISS CV → Arbhar scan."] },
   { a: "beads", b: "fxaidxl", title: "Texture into space", get: "Granular bed, deep space.",
-    steps: ["Beads out → FX Aid XL in.", "A long reverb turns it into ambience."] }
+    steps: ["Beads out → FX Aid XL in.", "A long reverb turns it into ambience."] },
+  { a: "marbles", b: "plaits", title: "Random melody in key", get: "Notes chosen by chance, snapped to a scale.",
+    steps: ["Marbles: raise STEPS to quantise X1.", "X1 → Plaits V/OCT · t1 → Plaits TRIG."] },
+  { a: "marbles", b: "rings", title: "Random mallets", get: "Struck notes that never repeat.",
+    steps: ["Marbles t gate → Rings strum.", "Quantised X1 → Rings V/OCT."] },
+  { a: "marbles", b: "arbhar", title: "Random grain scan", get: "The cloud jumps to new spots on its own.",
+    steps: ["Marbles X1 → Arbhar scan.", "A t gate triggers fresh grains."] },
+  { a: "marbles", b: "harmonaig", title: "Chance chords in key", get: "Random roots, always harmonised.",
+    steps: ["Marbles X1 → Harmonaig root.", "Set key and scale; take the four chord voices."] },
+  { a: "marbles", b: "batumi", title: "Sync the LFOs", get: "Modulation reset by the random clock.",
+    steps: ["Marbles t2 (steady clock) → Batumi reset.", "The four LFOs restart in time with t."] },
+  { a: "marbles", b: "fxaidxl", title: "Random FX motion", get: "Effects that drift by themselves.",
+    steps: ["Marbles Y (slow random) → an FX Aid XL CV input.", "A parameter now wanders, never repeating."] },
+  { a: "marbles", b: "beads", title: "Randomise the grains", get: "Texture that reshapes itself.",
+    steps: ["Marbles Y → Beads density (or size).", "Slow, smooth Y keeps the drift musical."] },
+  { a: "pams", b: "marbles", title: "Clock the randomness", get: "Chance events locked to your tempo.",
+    steps: ["Pam's clock → Marbles t CLOCK.", "Marbles now rolls its gates in time."] },
+  { a: "gliss", b: "marbles", title: "Quantise a gesture", get: "Your hand-drawn line, snapped to a scale.",
+    steps: ["Enable Marbles external mode; GLISS CV → X CV.", "Raise STEPS; take X1 as the quantised output."] }
 ];
 
 let relIdx = 0;
