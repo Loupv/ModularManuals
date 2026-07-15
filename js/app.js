@@ -369,7 +369,15 @@ function renderSection(m, si) {
   const paras = (sec.body || (sec.intro ? [sec.intro] : []))
     .map((p) => `<p class="section-body">${hot(esc(p), m)}</p>`)
     .join("");
-  return `${paras}${taskBlock}${fig}${modelTable}${ctrlList}`;
+  // Optional reference list (e.g. a module's factory sample library) — name + blurb
+  // rows, always visible, and kept out of the panel guide (unlike `controls`).
+  const libRows = (sec.library || [])
+    .map((x) => `<div class="ctrl"><dt><span class="ctrl-name">${esc(x.name)}</span></dt><dd>${esc(x.desc)}</dd></div>`)
+    .join("");
+  const libBlock = libRows
+    ? `<div class="block-label">${esc(sec.libraryLabel || "In the library")}</div><dl class="ctrl-list lib-list">${libRows}</dl>`
+    : "";
+  return `${paras}${taskBlock}${fig}${libBlock}${modelTable}${ctrlList}`;
 }
 
 // Overview hub: a clickable card per function (section), image-forward.

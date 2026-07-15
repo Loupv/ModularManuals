@@ -1396,7 +1396,8 @@ const MODULES = [
         "title": "Library management",
         "body": [
           "The three-page Load/Save Menu (Shift, Capture, Strike) clones layers, loads layers and scenes, and saves scenes via double-tap Shift.",
-          "Cloning needs no USB; loading and saving use the drive's library and 42 scene slots non-destructively."
+          "Cloning needs no USB; loading and saving use the drive's library and 42 scene slots non-destructively.",
+          "The V2 firmware ships on a 4 GB USB drive with 216 royalty-free samples (48 kHz / 24-bit), grouped as below."
         ],
         "controls": [
           {
@@ -1461,6 +1462,49 @@ const MODULES = [
               "Turn the Layer Knob to the scene slot you want; hold Shift to preview it.",
               "Double-tap Shift to load — the scene's six layers and settings load and the menu exits."
             ]
+          }
+        ],
+        "libraryLabel": "On the factory USB drive",
+        "library": [
+          {
+            "name": "Prepared electric guitar",
+            "desc": "Bowed, plucked and beaten guitar through amp and body mics."
+          },
+          {
+            "name": "Prepared Rhodes",
+            "desc": "Fender Rhodes MKI — bowed, plucked and amplified."
+          },
+          {
+            "name": "Percussion",
+            "desc": "Cymbals & XY washes, snares in different rooms, binaural 360° toms, modular drums."
+          },
+          {
+            "name": "Modal Modular",
+            "desc": "Quantised modular chord patches across modes I and III–VII."
+          },
+          {
+            "name": "LRØ mid/side chords",
+            "desc": "Two-chord cadences with guitars, keys, and drum-machines & synths."
+          },
+          {
+            "name": "Choirs (LRØ)",
+            "desc": "Male, female and mixed choral chords built up across the buffer."
+          },
+          {
+            "name": "Piano+",
+            "desc": "Prepared-piano phrases, resonances and percussive hits."
+          },
+          {
+            "name": "Found sounds",
+            "desc": "Water & breath, organic materials and ambiences."
+          },
+          {
+            "name": "Electronics",
+            "desc": "Glitches, bass drops, crackles, bleeps and bloops."
+          },
+          {
+            "name": "Arcade",
+            "desc": "Sampled sounds from many classic arcade games."
           }
         ]
       },
