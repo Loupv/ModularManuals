@@ -369,13 +369,18 @@ function renderSection(m, si) {
   const paras = (sec.body || (sec.intro ? [sec.intro] : []))
     .map((p) => `<p class="section-body">${hot(esc(p), m)}</p>`)
     .join("");
-  // Optional reference list (e.g. a module's factory sample library) — name + blurb
-  // rows, always visible, and kept out of the panel guide (unlike `controls`).
-  const libRows = (sec.library || [])
-    .map((x) => `<div class="ctrl"><dt><span class="ctrl-name">${esc(x.name)}</span></dt><dd>${esc(x.desc)}</dd></div>`)
+  // Optional sample-library map: one block per USB folder, each listing its
+  // banks slot by slot. Kept out of the panel guide (unlike `controls`).
+  const libFolders = (sec.libraryFolders || [])
+    .map((f) => `<div class="lib-folder">
+        <div class="lib-folder-head"><code>${esc(f.path)}</code><span>${esc(f.theme)}</span></div>
+        <dl class="ctrl-list lib-list">${f.banks
+          .map((b, i) => `<div class="ctrl"><dt><span class="ctrl-name">Bank ${i + 1}${b.name ? ` · ${esc(b.name)}` : ""}</span></dt><dd>${esc(b.samples)}</dd></div>`)
+          .join("")}</dl>
+      </div>`)
     .join("");
-  const libBlock = libRows
-    ? `<div class="block-label">${esc(sec.libraryLabel || "In the library")}</div><dl class="ctrl-list lib-list">${libRows}</dl>`
+  const libBlock = libFolders
+    ? `<div class="block-label">${esc(sec.libraryLabel || "Sample library, bank by bank")}</div>${libFolders}`
     : "";
   return `${paras}${taskBlock}${fig}${libBlock}${modelTable}${ctrlList}`;
 }

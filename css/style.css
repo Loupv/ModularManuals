@@ -506,6 +506,19 @@ a:hover { text-decoration: underline; }
 .pt-steps { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 7px; }
 .pt-steps li { color: var(--text-dim); font-size: 0.86rem; line-height: 1.45; }
 
+/* Sample-library map (Arbhar): one block per USB folder, banks slot by slot */
+.lib-folder { margin: 0 0 18px; }
+.lib-folder-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px;
+  padding-bottom: 6px; margin-bottom: 4px; border-bottom: 1px solid var(--border);
+}
+.lib-folder-head code {
+  font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem;
+  color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 5px;
+}
+.lib-folder-head span { font-size: 0.82rem; color: var(--text-faint); }
+.lib-list .ctrl-name { font-variant-numeric: tabular-nums; }
+
 /* Pick & reroll slot machine */
 .slot {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
