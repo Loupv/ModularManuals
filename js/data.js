@@ -1468,183 +1468,435 @@ const MODULES = [
         "libraryFolders": [
           {
             "path": "_arbhar_library",
+            "title": "Default set",
             "theme": "Prepared guitar, Rhodes & found percussion",
             "banks": [
               {
-                "samples": "BellDeath · Buzzfade · ClangerBattleground · ClangerBossDeath · FallFromTree · Friction"
+                "cells": [
+                  "BellDeath",
+                  "Buzzfade",
+                  "ClangerBattleground",
+                  "ClangerBossDeath",
+                  "FallFromTree",
+                  "Friction"
+                ]
               },
               {
-                "samples": "PluckyDialup · PrisonBreak · RoboZither · RopeTension · UnderwaterPicnic · HangdrumSad"
+                "cells": [
+                  "PluckyDialup",
+                  "PrisonBreak",
+                  "RoboZither",
+                  "RopeTension",
+                  "UnderwaterPicnic",
+                  "HangdrumSad"
+                ]
               },
               {
-                "samples": "ClangerArmy · GiantsSteps · GlassBandsaw · ScratchBump · ScratchBumpPluck · UnderwaterWine"
+                "cells": [
+                  "ClangerArmy",
+                  "GiantsSteps",
+                  "GlassBandsaw",
+                  "ScratchBump",
+                  "ScratchBumpPluck",
+                  "UnderwaterWine"
+                ]
               },
               {
-                "samples": "Hello · Halt · Question · MagicWell · SebulbasRegret · SebulbasPlea"
+                "cells": [
+                  "Hello",
+                  "Halt",
+                  "Question",
+                  "MagicWell",
+                  "SebulbasRegret",
+                  "SebulbasPlea"
+                ]
               },
               {
-                "samples": "ChangeOfHeart · Crypt · GrantedWish · Mineshaft · SadSwing · Rust"
+                "cells": [
+                  "ChangeOfHeart",
+                  "Crypt",
+                  "GrantedWish",
+                  "Mineshaft",
+                  "SadSwing",
+                  "Rust"
+                ]
               },
               {
-                "samples": "Honker · SloMoCrash · Stalker · UFOLanding · UFOStun · UFOProbe"
+                "cells": [
+                  "Honker",
+                  "SloMoCrash",
+                  "Stalker",
+                  "UFOLanding",
+                  "UFOStun",
+                  "UFOProbe"
+                ]
               }
-            ],
-            "title": "Default set"
+            ]
           },
           {
             "path": "_arbhar_library_2",
+            "title": "Percussion",
             "theme": "Cymbals, snares, binaural toms & modular drums",
             "banks": [
               {
                 "name": "Hats & scrapes",
-                "samples": "Hats · Scrape1 · Scrape2 · ScrapeAndPlunge · ScrapeAndTinkle · Stack"
+                "cells": [
+                  "Hats",
+                  "Scrape1",
+                  "Scrape2",
+                  "ScrapeAndPlunge",
+                  "ScrapeAndTinkle",
+                  "Stack"
+                ]
               },
               {
                 "name": "XY cymbal washes",
-                "samples": "WashXY 1 · 2 · 3 · 4 · 5 · 6"
+                "cells": [
+                  "WashXY1",
+                  "WashXY2",
+                  "WashXY3",
+                  "WashXY4",
+                  "WashXY5",
+                  "WashXY6"
+                ]
               },
               {
-                "name": "Snares (dry→wet rooms)",
-                "samples": "DryDry · Dry · MedDry · MedWet · Wet · WetWet"
+                "name": "Snares (rooms)",
+                "cells": [
+                  "DryDry",
+                  "Dry",
+                  "MedDry",
+                  "MedWet",
+                  "Wet",
+                  "WetWet"
+                ]
               },
               {
                 "name": "Modular drums",
-                "samples": "Roundabout · FallingUp · Rushes · SnakeInTheGrass · LoFoundation · ToySoldiers"
+                "cells": [
+                  "Roundabout",
+                  "FallingUp",
+                  "Rushes",
+                  "SnakeInTheGrass",
+                  "LoFoundation",
+                  "ToySoldiers"
+                ]
               },
               {
                 "name": "Binaural beats",
-                "samples": "90a · 90b · 100 · 110a · 110b · 140"
+                "cells": [
+                  "90a",
+                  "90b",
+                  "100",
+                  "110a",
+                  "110b",
+                  "140"
+                ]
               },
               {
-                "name": "Binaural 360° toms (HIMO)",
-                "samples": "HIMO 1 · 2 · 3 · 4 · 5 · 6"
+                "name": "Binaural 360° toms",
+                "cells": [
+                  "HIMO1",
+                  "HIMO2",
+                  "HIMO3",
+                  "HIMO4",
+                  "HIMO5",
+                  "HIMO6"
+                ]
               }
-            ],
-            "title": "Percussion"
+            ]
           },
           {
             "path": "_arbhar_library_3",
+            "title": "Modal Modular",
             "theme": "Quantised modular chords (Mode II omitted)",
             "banks": [
               {
                 "name": "Mode I",
-                "samples": "i · ii · iii · iv · v · vi"
+                "cells": [
+                  "i",
+                  "ii",
+                  "iii",
+                  "iv",
+                  "v",
+                  "vi"
+                ]
               },
               {
                 "name": "Mode III",
-                "samples": "i · ii · iii · iv · v · vi"
+                "cells": [
+                  "i",
+                  "ii",
+                  "iii",
+                  "iv",
+                  "v",
+                  "vi"
+                ]
               },
               {
                 "name": "Mode IV",
-                "samples": "i · ii · iii · iv · v · vi"
+                "cells": [
+                  "i",
+                  "ii",
+                  "iii",
+                  "iv",
+                  "v",
+                  "vi"
+                ]
               },
               {
                 "name": "Mode V",
-                "samples": "i · ii · iii · iv · v · vi"
+                "cells": [
+                  "i",
+                  "ii",
+                  "iii",
+                  "iv",
+                  "v",
+                  "vi"
+                ]
               },
               {
                 "name": "Mode VI",
-                "samples": "i · ii · iii · iv · v · vi"
+                "cells": [
+                  "i",
+                  "ii",
+                  "iii",
+                  "iv",
+                  "v",
+                  "vi"
+                ]
               },
               {
                 "name": "Mode VII",
-                "samples": "i · ii · iii · iv · v · vi"
+                "cells": [
+                  "i",
+                  "ii",
+                  "iii",
+                  "iv",
+                  "v",
+                  "vi"
+                ]
               }
-            ],
-            "title": "Modal Modular"
+            ]
           },
           {
             "path": "_arbhar_library_4",
+            "title": "Mid/side chords",
             "theme": "Guitars, keys, drums & choirs in LRØ",
             "banks": [
               {
                 "name": "Guitars",
-                "samples": "G–C7 · Em–F · Fm7–Am9 · C#m9–B7 · D9–G7 · Dm7–C7"
+                "cells": [
+                  "G–C7",
+                  "Em–F",
+                  "Fm7–Am9",
+                  "C#m9–B7",
+                  "D9–G7",
+                  "Dm7–C7"
+                ]
               },
               {
                 "name": "Keys",
-                "samples": "Ab–Fm · Cm–Eb · Db–Bb · Dm–F · Eb–Cm · Gm–Bb"
+                "cells": [
+                  "Ab–Fm",
+                  "Cm–Eb",
+                  "Db–Bb",
+                  "Dm–F",
+                  "Eb–Cm",
+                  "Gm–Bb"
+                ]
               },
               {
-                "name": "Drum machines & synths (JX)",
-                "samples": "1 · 2 · 3 · 4 · 5 · 6"
+                "name": "Drum machines (JX)",
+                "cells": [
+                  "JX1",
+                  "JX2",
+                  "JX3",
+                  "JX4",
+                  "JX5",
+                  "JX6"
+                ]
               },
               {
                 "name": "Male choir",
-                "samples": "MM · OO · AA · EE · ALL · ALL (faded)"
+                "cells": [
+                  "MM",
+                  "OO",
+                  "AA",
+                  "EE",
+                  "ALL",
+                  "ALL faded"
+                ]
               },
               {
                 "name": "Female choir",
-                "samples": "MM · OO · AA · EE · ALL · ALL (faded)"
+                "cells": [
+                  "MM",
+                  "OO",
+                  "AA",
+                  "EE",
+                  "ALL",
+                  "ALL faded"
+                ]
               },
               {
                 "name": "Mixed choir",
-                "samples": "MM · OO · AA · EE · ALL · ALL (faded)"
+                "cells": [
+                  "MM",
+                  "OO",
+                  "AA",
+                  "EE",
+                  "ALL",
+                  "ALL faded"
+                ]
               }
-            ],
-            "title": "Mid/side chords"
+            ]
           },
           {
             "path": "_arbhar_library_5",
+            "title": "Piano+ & found sounds",
             "theme": "Prepared-piano phrases, resonances & field recordings",
             "banks": [
               {
                 "name": "Piano+ phrases",
-                "samples": "RisingPhrase · FallingPhrase · Key&BowCadence · PhraseWithCrash · EstrangedLine · FutureHarpsichord"
+                "cells": [
+                  "RisingPhrase",
+                  "FallingPhrase",
+                  "Key&BowCadence",
+                  "PhraseWithCrash",
+                  "EstrangedLine",
+                  "FutureHarpsichord"
+                ]
               },
               {
-                "name": "Piano+ bowed/textural",
-                "samples": "Tinnitus · Scrapes · BowedPianoLine · RingAndCup · PanicBuild · BowedPianoDecresc"
+                "name": "Piano+ bowed",
+                "cells": [
+                  "Tinnitus",
+                  "Scrapes",
+                  "BowedPianoLine",
+                  "RingAndCup",
+                  "PanicBuild",
+                  "BowedPianoDecresc"
+                ]
               },
               {
                 "name": "Piano+ percussive",
-                "samples": "BellPluck · AmbientSlaps · PercussiveBounces · HarmonicBounces · DungeonKeys · Resonances"
+                "cells": [
+                  "BellPluck",
+                  "AmbientSlaps",
+                  "PercussiveBounces",
+                  "HarmonicBounces",
+                  "DungeonKeys",
+                  "Resonances"
+                ]
               },
               {
-                "name": "Found sounds · water & breath",
-                "samples": "Pond · Shore · River · Inhale · Exhale · WaterBreath"
+                "name": "Water & breath",
+                "cells": [
+                  "Pond",
+                  "Shore",
+                  "River",
+                  "Inhale",
+                  "Exhale",
+                  "WaterBreath"
+                ]
               },
               {
-                "name": "Found sounds · organic materials",
-                "samples": "Leaves · Wood · Flotsam · Gravel · Pebbles · Rocks"
+                "name": "Organic materials",
+                "cells": [
+                  "Leaves",
+                  "Wood",
+                  "Flotsam",
+                  "Gravel",
+                  "Pebbles",
+                  "Rocks"
+                ]
               },
               {
-                "name": "Found sounds · ambiences",
-                "samples": "MuseumChains · FiddlerInTheRain · BalconyBreakfast · StormRoom · HarpWarmup · EnsembleWarmup"
+                "name": "Ambiences",
+                "cells": [
+                  "MuseumChains",
+                  "FiddlerInTheRain",
+                  "BalconyBreakfast",
+                  "StormRoom",
+                  "HarpWarmup",
+                  "EnsembleWarmup"
+                ]
               }
-            ],
-            "title": "Piano+ & found sounds"
+            ]
           },
           {
             "path": "_arbhar_library_6",
+            "title": "Electronics & arcade",
             "theme": "Alien transmissions, game FX & arcade sounds",
             "banks": [
               {
                 "name": "Alien transmissions",
-                "samples": "AlienTransmission1 · 2 · 3 · CaveDweller · Processing · Debrief"
+                "cells": [
+                  "AlienTransmission1",
+                  "AlienTransmission2",
+                  "AlienTransmission3",
+                  "CaveDweller",
+                  "Processing",
+                  "Debrief"
+                ]
               },
               {
                 "name": "Game electronics",
-                "samples": "Diagnostics · Powerup · TitleScreen · CritterSwarm · Plasma · PreBossWorkout"
+                "cells": [
+                  "Diagnostics",
+                  "Powerup",
+                  "TitleScreen",
+                  "CritterSwarm",
+                  "Plasma",
+                  "PreBossWorkout"
+                ]
               },
               {
                 "name": "Space textures",
-                "samples": "MaracasInSpace · BinLidBlackHole · GalacticDidgeridoo · Interference · DistantStorm · Implosion"
+                "cells": [
+                  "MaracasInSpace",
+                  "BinLidBlackHole",
+                  "GalacticDidgeridoo",
+                  "Interference",
+                  "DistantStorm",
+                  "Implosion"
+                ]
               },
               {
                 "name": "Arcade A",
-                "samples": "1 · 2 · 3 · 4 · 5 · 6"
+                "cells": [
+                  "A1",
+                  "A2",
+                  "A3",
+                  "A4",
+                  "A5",
+                  "A6"
+                ]
               },
               {
                 "name": "Arcade B",
-                "samples": "1 · 2 · 3 · 4 · 5 · 6"
+                "cells": [
+                  "B1",
+                  "B2",
+                  "B3",
+                  "B4",
+                  "B5",
+                  "B6"
+                ]
               },
               {
                 "name": "Arcade C",
-                "samples": "1 · 2 · 3 · 4 · 5 · 6"
+                "cells": [
+                  "C1",
+                  "C2",
+                  "C3",
+                  "C4",
+                  "C5",
+                  "C6"
+                ]
               }
-            ],
-            "title": "Electronics & arcade"
+            ]
           }
         ]
       },

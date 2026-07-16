@@ -372,22 +372,29 @@ function renderSection(m, si) {
   // Optional sample-library map: one block per USB folder, each listing its
   // banks slot by slot. Kept out of the panel guide (unlike `controls`).
   const libFolders = (sec.libraryFolders || [])
-    .map((f, fi) => `<div class="lib-folder">
-        <div class="lib-folder-head">
-          <span class="lib-num">${fi + 1}</span>
-          <div class="lib-head-text">
-            <span class="lib-title">${esc(f.title || f.theme)}</span>
-            ${f.theme && f.title ? `<span class="lib-theme">${esc(f.theme)}</span>` : ""}
-            <code>${esc(f.path)}</code>
+    .map((f, fi) => {
+      const headerCells = [1, 2, 3, 4, 5, 6].map((n) => `<th scope="col">L${n}</th>`).join("");
+      const rows = f.banks
+        .map((b, i) => `<tr>
+            <th scope="row"><span class="lib-bank-n">${i + 1}</span>${b.name ? `<span class="lib-bank-name">${esc(b.name)}</span>` : ""}</th>
+            ${(b.cells || []).map((c) => `<td>${esc(c)}</td>`).join("")}
+          </tr>`)
+        .join("");
+      return `<div class="lib-folder">
+          <div class="lib-folder-head">
+            <span class="lib-num">${fi + 1}</span>
+            <div class="lib-head-text">
+              <span class="lib-title">${esc(f.title || f.theme)}</span>
+              ${f.theme && f.title ? `<span class="lib-theme">${esc(f.theme)}</span>` : ""}
+              <code>${esc(f.path)}</code>
+            </div>
           </div>
-        </div>
-        <div class="lib-banks">${f.banks
-          .map((b, i) => `<div class="lib-bank">
-            <div class="lib-bank-label"><span class="lib-bank-n">${i + 1}</span>${b.name ? `<span>${esc(b.name)}</span>` : ""}</div>
-            <div class="lib-bank-samples">${esc(b.samples)}</div>
-          </div>`)
-          .join("")}</div>
-      </div>`)
+          <div class="lib-table-wrap"><table class="lib-table">
+            <thead><tr><th scope="col" class="lib-corner">bank ╲ layer</th>${headerCells}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table></div>
+        </div>`;
+    })
     .join("");
   const libBlock = libFolders
     ? `<div class="block-label">${esc(sec.libraryLabel || "Sample library, bank by bank")}</div>${libFolders}`
