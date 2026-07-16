@@ -372,11 +372,21 @@ function renderSection(m, si) {
   // Optional sample-library map: one block per USB folder, each listing its
   // banks slot by slot. Kept out of the panel guide (unlike `controls`).
   const libFolders = (sec.libraryFolders || [])
-    .map((f) => `<div class="lib-folder">
-        <div class="lib-folder-head"><code>${esc(f.path)}</code><span>${esc(f.theme)}</span></div>
-        <dl class="ctrl-list lib-list">${f.banks
-          .map((b, i) => `<div class="ctrl"><dt><span class="ctrl-name">Bank ${i + 1}${b.name ? ` · ${esc(b.name)}` : ""}</span></dt><dd>${esc(b.samples)}</dd></div>`)
-          .join("")}</dl>
+    .map((f, fi) => `<div class="lib-folder">
+        <div class="lib-folder-head">
+          <span class="lib-num">${fi + 1}</span>
+          <div class="lib-head-text">
+            <span class="lib-title">${esc(f.title || f.theme)}</span>
+            ${f.theme && f.title ? `<span class="lib-theme">${esc(f.theme)}</span>` : ""}
+            <code>${esc(f.path)}</code>
+          </div>
+        </div>
+        <div class="lib-banks">${f.banks
+          .map((b, i) => `<div class="lib-bank">
+            <div class="lib-bank-label"><span class="lib-bank-n">${i + 1}</span>${b.name ? `<span>${esc(b.name)}</span>` : ""}</div>
+            <div class="lib-bank-samples">${esc(b.samples)}</div>
+          </div>`)
+          .join("")}</div>
       </div>`)
     .join("");
   const libBlock = libFolders

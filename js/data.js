@@ -1468,7 +1468,7 @@ const MODULES = [
         "libraryFolders": [
           {
             "path": "_arbhar_library",
-            "theme": "Default set · prepared guitar, Rhodes & found percussion",
+            "theme": "Prepared guitar, Rhodes & found percussion",
             "banks": [
               {
                 "samples": "BellDeath · Buzzfade · ClangerBattleground · ClangerBossDeath · FallFromTree · Friction"
@@ -1488,11 +1488,12 @@ const MODULES = [
               {
                 "samples": "Honker · SloMoCrash · Stalker · UFOLanding · UFOStun · UFOProbe"
               }
-            ]
+            ],
+            "title": "Default set"
           },
           {
             "path": "_arbhar_library_2",
-            "theme": "Percussion",
+            "theme": "Cymbals, snares, binaural toms & modular drums",
             "banks": [
               {
                 "name": "Hats & scrapes",
@@ -1518,11 +1519,12 @@ const MODULES = [
                 "name": "Binaural 360° toms (HIMO)",
                 "samples": "HIMO 1 · 2 · 3 · 4 · 5 · 6"
               }
-            ]
+            ],
+            "title": "Percussion"
           },
           {
             "path": "_arbhar_library_3",
-            "theme": "Modal Modular · quantised chords (Mode II omitted)",
+            "theme": "Quantised modular chords (Mode II omitted)",
             "banks": [
               {
                 "name": "Mode I",
@@ -1548,11 +1550,12 @@ const MODULES = [
                 "name": "Mode VII",
                 "samples": "i · ii · iii · iv · v · vi"
               }
-            ]
+            ],
+            "title": "Modal Modular"
           },
           {
             "path": "_arbhar_library_4",
-            "theme": "Mid/side chords (LRØ)",
+            "theme": "Guitars, keys, drums & choirs in LRØ",
             "banks": [
               {
                 "name": "Guitars",
@@ -1578,11 +1581,12 @@ const MODULES = [
                 "name": "Mixed choir",
                 "samples": "MM · OO · AA · EE · ALL · ALL (faded)"
               }
-            ]
+            ],
+            "title": "Mid/side chords"
           },
           {
             "path": "_arbhar_library_5",
-            "theme": "Piano+ & found sounds",
+            "theme": "Prepared-piano phrases, resonances & field recordings",
             "banks": [
               {
                 "name": "Piano+ phrases",
@@ -1608,11 +1612,12 @@ const MODULES = [
                 "name": "Found sounds · ambiences",
                 "samples": "MuseumChains · FiddlerInTheRain · BalconyBreakfast · StormRoom · HarpWarmup · EnsembleWarmup"
               }
-            ]
+            ],
+            "title": "Piano+ & found sounds"
           },
           {
             "path": "_arbhar_library_6",
-            "theme": "Electronics & arcade",
+            "theme": "Alien transmissions, game FX & arcade sounds",
             "banks": [
               {
                 "name": "Alien transmissions",
@@ -1638,7 +1643,8 @@ const MODULES = [
                 "name": "Arcade C",
                 "samples": "1 · 2 · 3 · 4 · 5 · 6"
               }
-            ]
+            ],
+            "title": "Electronics & arcade"
           }
         ]
       },
